@@ -19,7 +19,7 @@ the ~5-file guideline in T1.
   - Files: `package.json`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`,
     `vite.config.ts`, `index.html`, `src/main.tsx`, `src/App.tsx`
 
-- [ ] **T2: Lint, format, and unit-test harness** (S)
+- [x] **T2: Lint, format, and unit-test harness** (S)
   - Acceptance: ESLint (typescript-eslint, react-hooks, `jsx-a11y`
     recommended) and Prettier (same settings as `alexandryn`) run clean;
     Vitest + jsdom + Testing Library run one smoke test that renders `<App/>`.
