@@ -97,10 +97,12 @@ the ~5-file guideline in T1.
   - Files: `src/components/Hero.tsx`, `src/components/DeviceMockup.tsx`,
     `src/components/BookCover.tsx`, `src/components/Hero.test.tsx`
 
-- [ ] **T8: Concepts and How it works** (S)
+- [x] **T8: Concepts and How it works** (S)
   - Acceptance: three concept cards (metadata, sources, library) with the CSS
     icons, each icon decorative; three numbered steps with dividers that
-    hide when wrapped; heading order `h2` → `h3` correct.
+    hide when wrapped; concept titles are `h2` (the prototype gives the cards no
+    section heading, so `h3` would skip a level under the `h1`); step titles are
+    `h3` under the `h2` "How it works".
   - Verify: `npm test`; visual check at 320 and 1280 px
   - Depends on: T6
   - Files: `src/components/Concepts.tsx`, `src/components/HowItWorks.tsx`,
