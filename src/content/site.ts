@@ -98,12 +98,16 @@ export const site = {
       body: 'Your books in one place. Filter, sort, and search without a cloud.',
       filterLabel: 'Filter',
       sortLabel: 'Sort',
+      countLabel: '10 BOOKS',
     },
     devices: {
       title: 'Read on any device',
       body: 'Open Alexandryn on your laptop. Pick up where you left off on your phone or tablet, over your home network.',
       desktopLabel: 'READING · DESKTOP',
       phoneLabel: 'PHONE',
+      // The opening of Moby-Dick (public domain), split across the two devices.
+      desktopExcerpt: 'Call me Ishmael. Some years ago — never mind how long precisely —',
+      phoneExcerpt: 'having little or no money in my purse,',
     },
     privacy: {
       title: 'No cloud service',
