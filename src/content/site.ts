@@ -135,7 +135,7 @@ export const site = {
     signingNote:
       'The installers are not yet code-signed, so macOS and Windows will warn you the first time you open Alexandryn.',
     dockerLead: 'Prefer Docker? Read the ',
-    dockerLinkLabel: 'self-hosting guide',
+    dockerLinkLabel: 'self-hosting guide →',
     dockerHref: `${docsRepo}/blob/main/self-hosting-guide.md`,
   },
 
