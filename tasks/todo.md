@@ -86,7 +86,7 @@ the ~5-file guideline in T1.
   - Files: `src/components/Nav.tsx`, `src/components/Footer.tsx`, `src/App.tsx`,
     `src/components/Nav.test.tsx`, `src/components/Footer.test.tsx`
 
-- [ ] **T7: Hero and device mockup** (M)
+- [x] **T7: Hero and device mockup** (M)
   - Acceptance: single `h1` with the design's serif headline and the
     accent underline on "at home"; corrected subline including the Docker
     mention; primary + secondary CTA; footnote in `ink-2`; laptop + phone
