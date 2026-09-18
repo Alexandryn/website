@@ -8,7 +8,7 @@ the ~5-file guideline in T1.
 
 ## Phase 1 — Foundation
 
-- [ ] **T1: Toolchain that builds and typechecks** (M, config)
+- [x] **T1: Toolchain that builds and typechecks** (M, config)
   - Acceptance: `npm ci` installs; `npm run typecheck` and `npm run build`
     pass on a stub `<App/>`; TS strict + `noUncheckedIndexedAccess`; React 19,
     Vite 8, Tailwind 4 versions match `alexandryn/web`; Node ≥ 24 enforced
@@ -142,6 +142,19 @@ the ~5-file guideline in T1.
 
 ## Phase 4 — Verification
 
+- [ ] **T12a: Prerender the page at build time** (S)
+  - Acceptance: after `vite build`, a script renders `<App/>` with
+    `react-dom/server` and writes the HTML into `dist/index.html`; the client
+    entry uses `hydrateRoot`; nothing in the component tree touches `window`
+    or `document` during render; `dist/index.html` contains the `h1`, all
+    section headings, and every link without running JavaScript.
+  - Verify: `npm test` (built HTML contains headings and links) and
+    `npm run build`; open `dist/index.html` with JS disabled and confirm the
+    page reads
+  - Depends on: T11
+  - Files: `scripts/prerender.ts`, `scripts/prerender.test.ts`, `src/main.tsx`,
+    `src/entry-server.tsx`, `package.json`
+
 - [ ] **T12: Playwright — axe, keyboard, responsive** (M)
   - Acceptance: zero axe violations at 320, 768, 1280 px; one `h1`, no skipped
     heading levels; Tab order reaches every link/button in reading order with
@@ -157,7 +170,7 @@ the ~5-file guideline in T1.
   - Acceptance: `check:links` fails on `href="#"`, empty, `example.com`, or
     missing `rel="noopener"` on `target=_blank`; `--strict` additionally
     requests every external URL (for launch; expected to fail until repos are
-    public); `check:bundle-size` fails above 60 KiB gzipped JS. Each script has
+    public); `check:bundle-size` fails above 90 KiB gzipped JS. Each script has
     a fixture test that proves it fails on bad input.
   - Verify: `npm test && npm run build && npm run check:links && npm run check:bundle-size`
   - Depends on: T11
@@ -166,7 +179,7 @@ the ~5-file guideline in T1.
 
 ### Checkpoint C — page is verified
 - [ ] Every command in the spec's Commands section passes
-- [ ] Success criteria 1–6 and 8 met
+- [ ] Success criteria 1–6 and 8 met (8: ≤ 90 KiB JS, content in built HTML)
 - [ ] `/agent-skills:review` including a security pass (no third-party origin
       at runtime, no secrets, `rel` attributes)
 
