@@ -1,0 +1,6 @@
+# Build output
+dist
+
+# Hand-wrapped planning docs; Prettier would re-flow their tables.
+SPEC.md
+tasks
