@@ -1,7 +1,9 @@
 import type { Site } from '../content/site.ts'
 import { FeatureRow } from './FeatureRow.tsx'
 import { LibraryVisual } from './LibraryVisual.tsx'
+import { PrivacyVisual } from './PrivacyVisual.tsx'
 import { ReadingVisual } from './ReadingVisual.tsx'
+import { TerminalPanel } from './TerminalPanel.tsx'
 
 export function Features({
   features,
@@ -22,6 +24,17 @@ export function Features({
           title={features.devices.title}
           body={features.devices.body}
           visual={<ReadingVisual devices={features.devices} />}
+          visualFirst
+        />
+        <FeatureRow
+          title={features.privacy.title}
+          body={features.privacy.body}
+          visual={<PrivacyVisual />}
+        />
+        <FeatureRow
+          title={features.openSource.title}
+          body={features.openSource.body}
+          visual={<TerminalPanel openSource={features.openSource} />}
           visualFirst
         />
       </div>

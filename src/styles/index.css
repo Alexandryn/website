@@ -24,6 +24,11 @@
   --color-warm: #b07c4f;
   --color-ok: #4a8a68;
 
+  /* Text on the dark terminal panel (measured against ink by check-contrast). */
+  --color-terminal-text: #dcd9d2;
+  --color-terminal-prompt: #8faf8f;
+  --color-terminal-muted: #9c978f;
+
   --font-sans: 'Geist', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
   --font-serif: 'Newsreader', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
