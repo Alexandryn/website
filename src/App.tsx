@@ -1,5 +1,7 @@
+import { Concepts } from './components/Concepts.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
+import { HowItWorks } from './components/HowItWorks.tsx'
 import { Nav } from './components/Nav.tsx'
 import { site } from './content/site.ts'
 
@@ -15,6 +17,8 @@ export function App() {
       <Nav name={site.name} nav={site.nav} />
       <main id={site.anchors.main} tabIndex={-1} className="outline-none">
         <Hero hero={site.hero} books={site.books} />
+        <Concepts concepts={site.concepts} />
+        <HowItWorks howItWorks={site.howItWorks} />
       </main>
       <Footer name={site.name} footer={site.footer} />
     </>

@@ -44,6 +44,18 @@ describe('App', () => {
     expect(main).toHaveAttribute('tabindex', '-1')
   })
 
+  it('has one h1 and never skips a heading level', () => {
+    const { container } = render(<App />)
+    const levels = [...container.querySelectorAll('h1,h2,h3,h4,h5,h6')].map((h) =>
+      Number(h.tagName[1]),
+    )
+    expect(levels[0]).toBe(1)
+    expect(levels.filter((level) => level === 1)).toHaveLength(1)
+    levels.forEach((level, i) => {
+      if (i > 0) expect(level, `heading ${i + 1}`).toBeLessThanOrEqual(levels[i - 1]! + 1)
+    })
+  })
+
   it('renders no prose that is not in site.ts', () => {
     const { container } = render(<App />)
     expect(textNotFromSite(container)).toEqual([])

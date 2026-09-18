@@ -55,14 +55,17 @@ export const site = {
 
   concepts: [
     {
+      icon: 'metadata',
       title: 'Your metadata',
       body: 'Titles, authors, covers and editions — sourced from Open Library, stored on your machine. No third-party account required.',
     },
     {
+      icon: 'sources',
       title: 'Your sources',
       body: 'Point it at a folder of books or an OPDS catalog. Sources can change; your reading history stays with your library.',
     },
     {
+      icon: 'library',
       title: 'Your library',
       body: "What you've read, what you're reading, and how far you've got, kept on your own server.",
     },
