@@ -1,4 +1,5 @@
 import { Footer } from './components/Footer.tsx'
+import { Hero } from './components/Hero.tsx'
 import { Nav } from './components/Nav.tsx'
 import { site } from './content/site.ts'
 
@@ -12,7 +13,9 @@ export function App() {
         {site.nav.skipLabel}
       </a>
       <Nav name={site.name} nav={site.nav} />
-      <main id={site.anchors.main} tabIndex={-1} className="outline-none" />
+      <main id={site.anchors.main} tabIndex={-1} className="outline-none">
+        <Hero hero={site.hero} books={site.books} />
+      </main>
       <Footer name={site.name} footer={site.footer} />
     </>
   )
