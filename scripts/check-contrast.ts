@@ -22,6 +22,10 @@ export const TEXT_PAIRS: ReadonlyArray<readonly [string, string]> = [
   ['accent', 'surface-alt'],
   ['on-accent', 'accent'],
   ['on-accent', 'accent-hover'],
+  // The terminal panel: light text on the dark ink background.
+  ['terminal-text', 'ink'],
+  ['terminal-prompt', 'ink'],
+  ['terminal-muted', 'ink'],
 ]
 
 function luminance(hex: string): number {

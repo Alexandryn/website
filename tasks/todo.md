@@ -118,7 +118,7 @@ the ~5-file guideline in T1.
   - Files: `src/components/Features.tsx`, `src/components/FeatureRow.tsx`,
     `src/components/Features.test.tsx`
 
-- [ ] **T10: Feature rows 3–4 (privacy, open source)** (S)
+- [x] **T10: Feature rows 3–4 (privacy, open source)** (S)
   - Acceptance: privacy row uses the corrected paragraph (own server, login
     always, TLS for public setups, Open Library disclosure); open-source row
     shows the terminal panel with `git clone <real URL>` and the licence as a

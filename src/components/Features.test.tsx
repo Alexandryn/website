@@ -58,3 +58,54 @@ describe('Features: library view and read-on-any-device', () => {
     expect(rows[1]).toHaveClass('flex-wrap-reverse')
   })
 })
+
+describe('Features: privacy and open source', () => {
+  it('shows both rows as h2 titles with their body text', () => {
+    renderFeatures()
+    for (const row of [site.features.privacy, site.features.openSource]) {
+      expect(screen.getByRole('heading', { level: 2, name: row.title })).toBeInTheDocument()
+      expect(screen.getByText(row.body)).toBeInTheDocument()
+    }
+    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(4)
+  })
+
+  it('draws the privacy illustration as one decorative graphic', () => {
+    const { container } = renderFeatures()
+    const visual = container.querySelector('[data-visual="privacy"]')!
+    expect(visual.closest('[data-feature-visual]')).toHaveAttribute('aria-hidden', 'true')
+    expect(visual.querySelector('svg')).not.toBeNull()
+  })
+
+  it('shows the clone command with a prompt, and the licence and note without one', () => {
+    const { container } = renderFeatures()
+    const panel = container.querySelector<HTMLElement>('[data-visual="terminal"]')!
+    const { terminalCommand, terminalCaption, terminalNote } = site.features.openSource
+    const command = within(panel).getByText(terminalCommand)
+    expect(command).toHaveAttribute('data-terminal-line', 'command')
+    expect(command.className).toContain("before:content-['$_']")
+    for (const text of [terminalCaption, terminalNote]) {
+      expect(within(panel).getByText(text).className).not.toContain('before:content')
+    }
+  })
+
+  it('lets a long command wrap only after a slash, never mid-word', () => {
+    const { container } = renderFeatures()
+    const command = container.querySelector<HTMLElement>('[data-terminal-line="command"]')!
+    // git clone https:// | github.com/ | Alexandryn/ | alexandryn.git
+    expect(command.querySelectorAll('wbr')).toHaveLength(3)
+    expect(command.className).not.toContain('break-all')
+    expect(command.textContent).toBe(site.features.openSource.terminalCommand)
+  })
+
+  it('clones the real repository', () => {
+    expect(site.features.openSource.terminalCommand).toBe(`git clone ${site.links.cloneUrl}`)
+  })
+
+  it('wraps the last row in reverse, like the second', () => {
+    const { container } = renderFeatures()
+    const rows = container.querySelectorAll('[data-feature-row]')
+    expect(rows).toHaveLength(4)
+    expect(rows[2]).toHaveClass('flex-wrap')
+    expect(rows[3]).toHaveClass('flex-wrap-reverse')
+  })
+})

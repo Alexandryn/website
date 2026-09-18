@@ -38,6 +38,9 @@ const THEME = `@theme {
   --color-accent-hover: #37517a;
   --color-on-accent: #ffffff;
   --color-warm: #b07c4f;
+  --color-terminal-text: #dcd9d2;
+  --color-terminal-prompt: #8faf8f;
+  --color-terminal-muted: #9c978f;
 }`
 
 /** Builds a fixture `src/` with one component and the theme, returning its path. */
