@@ -38,7 +38,7 @@ the ~5-file guideline in T1.
 
 ## Phase 2 — Design system and content
 
-- [ ] **T4: Tokens, self-hosted fonts, contrast check** (S)
+- [x] **T4: Tokens, self-hosted fonts, contrast check** (S)
   - Acceptance: design colours exist once as Tailwind `@theme` tokens
     (`bg`, `surface`, `surface-2`, `surface-3`, `ink`, `ink-2`, `ink-3`,
     `line`, `accent`, `accent-soft`, `warm`, …); Geist, Newsreader, IBM Plex
