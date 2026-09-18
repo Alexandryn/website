@@ -108,7 +108,7 @@ the ~5-file guideline in T1.
   - Files: `src/components/Concepts.tsx`, `src/components/HowItWorks.tsx`,
     `src/components/Concepts.test.tsx`
 
-- [ ] **T9: Feature rows 1–2 (library view, read on any device)** (M)
+- [x] **T9: Feature rows 1–2 (library view, read on any device)** (M)
   - Acceptance: alternating text/visual rows with the design's library-grid
     panel and the desktop + phone reading panels; visuals `aria-hidden` with
     the meaning carried by the row's text; row order flips on wrap as in
