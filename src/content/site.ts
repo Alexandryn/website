@@ -12,19 +12,21 @@ const releases = `${repo}/releases`
 
 const anchors = { main: 'main', docs: 'docs', download: 'download' } as const
 
+const links = {
+  repoUrl: repo,
+  cloneUrl: `${repo}.git`,
+  releasesUrl: releases,
+  changelogUrl: `${repo}/blob/main/CHANGELOG.md`,
+  licenseUrl: `${repo}/blob/main/LICENSE`,
+  securityUrl: `${repo}/blob/main/SECURITY.md`,
+} as const
+
 export const site = {
   name: 'Alexandryn',
   version,
   anchors,
 
-  links: {
-    repoUrl: repo,
-    cloneUrl: `${repo}.git`,
-    releasesUrl: releases,
-    changelogUrl: `${repo}/blob/main/CHANGELOG.md`,
-    licenseUrl: `${repo}/blob/main/LICENSE`,
-    securityUrl: `${repo}/blob/main/SECURITY.md`,
-  },
+  links,
 
   nav: {
     skipLabel: 'Skip to content',
@@ -41,13 +43,13 @@ export const site = {
     headlineEmphasis: 'at home',
     headlineEnd: '.',
     subline:
-      'Runs on your desktop, or on a home server with Docker. Every book you own, readable from your tablet, phone, or any other device on your home Wi-Fi — no cloud service, no third-party account.',
+      'Runs on your desktop, or on a home server with Docker. Your books, readable from your tablet, phone, or any other device on your home network — no cloud service, no third-party account.',
     primaryLabel: 'Download',
     primaryHref: `#${anchors.download}`,
     secondaryLabel: 'Read the docs',
     secondaryHref: `#${anchors.docs}`,
     footnote: 'macOS, Windows, and Linux · Open source · AGPL-3.0',
-    wifiLabel: 'HOME WI-FI',
+    networkLabel: 'HOME NETWORK',
   },
 
   concepts: [
@@ -71,7 +73,7 @@ export const site = {
       {
         number: '01',
         title: 'Install',
-        body: 'Download and open Alexandryn on your laptop or desktop, or start the Docker image on a home server.',
+        body: 'Download and open Alexandryn on your laptop or desktop, or run it on a home server with Docker.',
       },
       {
         number: '02',
@@ -89,26 +91,26 @@ export const site = {
   features: {
     library: {
       title: 'Library view',
-      body: 'Every book you own in one place. Filter, sort, and search your whole library without a cloud.',
+      body: 'Your books in one place. Filter, sort, and search without a cloud.',
       filterLabel: 'Filter',
       sortLabel: 'Sort',
     },
     devices: {
       title: 'Read on any device',
-      body: 'Open Alexandryn on your laptop. Pick up where you left off on your phone or tablet over Wi-Fi.',
+      body: 'Open Alexandryn on your laptop. Pick up where you left off on your phone or tablet, over your home network.',
       desktopLabel: 'READING · DESKTOP',
       phoneLabel: 'PHONE',
     },
     privacy: {
       title: 'No cloud service',
-      body: 'Your library and reading data stay on your own server. By default the only outside service Alexandryn contacts is Open Library, for book details. It only listens on your own machine until you turn network access on, it always requires a login, and a publicly reachable setup also requires TLS.',
+      body: 'Your library and reading data stay on your own server. By default the only outside service Alexandryn contacts is Open Library, for book details. Alexandryn only listens on your own machine until you turn network access on, it always requires a login, and a publicly reachable setup also requires TLS.',
     },
     openSource: {
       title: 'Open source',
       body: 'Licensed AGPL-3.0-or-later. Your books stay as ordinary files in your own folders, and your reading data can be exported.',
       terminalCommand: `git clone ${repo}.git`,
-      terminalCaption: 'Licence: AGPL-3.0-or-later',
-      terminalNote: 'No lock-in. Your books, your server.',
+      terminalCaption: 'License: AGPL-3.0-or-later',
+      terminalNote: 'Your books, your server.',
     },
   },
 
@@ -155,23 +157,23 @@ export const site = {
       {
         title: 'API contract',
         body: 'The OpenAPI specification, for developers',
-        href: `${repo}/blob/main/architecture-contracts.md`,
+        href: `${repo}/blob/main/api/openapi.yaml`,
       },
     ],
   },
 
   footer: {
     description:
-      'A self-hosted digital library for your home network. Runs on your desktop or on a home server; readable from any device on your Wi-Fi.',
+      'A self-hosted digital library for your home network. Runs on your desktop or on a home server; readable from any device on your network.',
     columns: [
       [
         { label: 'GitHub', href: repo },
         { label: 'Documentation', href: `#${anchors.docs}` },
       ],
       [
-        { label: 'Changelog', href: `${repo}/blob/main/CHANGELOG.md` },
-        { label: 'License', href: `${repo}/blob/main/LICENSE` },
-        { label: 'Security', href: `${repo}/blob/main/SECURITY.md` },
+        { label: 'Changelog', href: links.changelogUrl },
+        { label: 'License', href: links.licenseUrl },
+        { label: 'Security', href: links.securityUrl },
       ],
     ],
     licenseLine: 'GNU Affero General Public License v3.0 or later',
@@ -187,7 +189,7 @@ export const site = {
     { title: 'Walden', bg: '#3c5142', fg: '#e4ebe2' },
     { title: 'Jane Eyre', bg: '#4a3450', fg: '#ede4f0' },
     { title: 'Great Expectations', bg: '#2b4a5c', fg: '#e2ecf0' },
-    { title: 'Dracula', bg: '#8a6b2f', fg: '#f5eddc' },
+    { title: 'Dracula', bg: '#7f6127', fg: '#f5eddc' },
     { title: 'Wuthering Heights', bg: '#243b33', fg: '#e1eae4' },
     { title: 'The Picture of Dorian Gray', bg: '#4e4030', fg: '#efe6d8' },
   ],

@@ -1,92 +1,187 @@
 import { describe, expect, it } from 'vitest'
 import { site } from './site.ts'
 
-function collect(value: unknown, key = ''): Array<{ key: string; value: string }> {
-  if (typeof value === 'string') return [{ key, value }]
-  if (Array.isArray(value)) return value.flatMap((item) => collect(item, key))
+type Entry = { path: string; key: string; value: string }
+
+function collect(value: unknown, path = ''): Entry[] {
+  if (typeof value === 'string') return [{ path, key: path.split('.').pop() ?? '', value }]
+  if (Array.isArray(value)) return value.flatMap((item, i) => collect(item, `${path}[${i}]`))
   if (value && typeof value === 'object') {
-    return Object.entries(value).flatMap(([k, v]) => collect(v, k))
+    return Object.entries(value).flatMap(([k, v]) => collect(v, path ? `${path}.${k}` : k))
   }
   return []
 }
 
-const strings = collect(site)
-const prose = strings.filter(({ key }) => !['href', 'bg', 'fg'].includes(key))
-const hrefs = strings.filter(({ key }) => key === 'href' || key.endsWith('Url'))
+const isLinkKey = (key: string) => /(href|url)$/i.test(key)
+const isColourKey = (key: string) => key === 'bg' || key === 'fg'
 
-const has = (pattern: RegExp) => prose.some(({ value }) => pattern.test(value))
+// Claims the software cannot back up. Each was either in the prototype or is a
+// natural way to reword a true statement into a false one.
+const FORBIDDEN: Array<[label: string, pattern: RegExp]> = [
+  ['"no account" (Alexandryn has logins)', /\bno account\b|without an account/i],
+  ['"nothing leaves your home" (Open Library lookups are outbound)', /nothing (ever )?leaves/i],
+  [
+    'a claim of no outside contact',
+    /never (contacts?|phones?|calls?)|no outside (service|contact)/i,
+  ],
+  ['"no login" or an optional login', /no login|login (is )?optional|optional login/i],
+  ['"TLS never needed"', /TLS (is )?(never|not) (needed|required)/i],
+  ['"lock-in" marketing voice', /lock-in/i],
+  ['the placeholder example.com', /example\.com/i],
+  ['an exclamation mark', /!/],
+]
 
-describe('copy the prototype got wrong stays out', () => {
-  it.each([
-    ['"no account" (Alexandryn has logins)', /no account/i],
-    ['"Nothing leaves your home" (Open Library lookups are outbound)', /nothing leaves your home/i],
-    ['the prototype version v0.9', /v?0\.9\.\d/],
-    ['the placeholder example.com', /example\.com/],
-  ])('has no %s', (_label, pattern) => {
-    expect(has(pattern)).toBe(false)
+const ALLOWED_LINK_PREFIXES = [
+  'https://github.com/Alexandryn/alexandryn',
+  'https://github.com/Alexandryn/docs/',
+]
+
+/** Returns one message per problem; an empty array means the content is acceptable. */
+function auditContent(content: unknown, version: string, anchors: string[]): string[] {
+  const problems: string[] = []
+  const entries = collect(content)
+  const prose = entries.filter(({ key }) => !isLinkKey(key) && !isColourKey(key))
+
+  for (const { path, value } of prose) {
+    for (const [label, pattern] of FORBIDDEN) {
+      if (pattern.test(value)) problems.push(`${path}: contains ${label}`)
+    }
+    for (const found of value.match(/\bv?\d+\.\d+\.\d+\b/g) ?? []) {
+      if (found.replace(/^v/, '') !== version)
+        problems.push(`${path}: version ${found} is not ${version}`)
+    }
+  }
+
+  for (const { path, value } of entries.filter(({ key }) => isLinkKey(key))) {
+    if (value === '' || value === '#') problems.push(`${path}: empty or placeholder link`)
+    else if (value.startsWith('#')) {
+      if (!anchors.includes(value.slice(1))) problems.push(`${path}: no section "${value}"`)
+    } else if (!ALLOWED_LINK_PREFIXES.some((prefix) => value.startsWith(prefix))) {
+      problems.push(`${path}: ${value} is not on an allowed https origin`)
+    }
+  }
+  return problems
+}
+
+const audit = (content: unknown) => auditContent(content, site.version, Object.values(site.anchors))
+
+/** A deep copy of `site` with the string at `path` replaced. */
+function withValue(path: string, value: string): unknown {
+  const copy = structuredClone(site) as Record<string, unknown>
+  const parts = path.replace(/\[(\d+)\]/g, '.$1').split('.')
+  let node: Record<string, unknown> = copy
+  for (const part of parts.slice(0, -1)) node = node[part] as Record<string, unknown>
+  node[parts.at(-1)!] = value
+  return copy
+}
+
+describe('the real content', () => {
+  it('passes the audit', () => {
+    expect(audit(site)).toEqual([])
   })
 
-  it('has no exclamation marks', () => {
-    expect(has(/!/)).toBe(false)
+  it('audits every link, including the camelCase *Href keys', () => {
+    const links = collect(site).filter(({ key }) => isLinkKey(key))
+    for (const key of ['primaryHref', 'secondaryHref', 'downloadHref', 'dockerHref']) {
+      expect(
+        links.some((l) => l.key === key),
+        key,
+      ).toBe(true)
+    }
+    expect(links.length).toBeGreaterThan(20)
   })
 })
 
-describe('corrected statements are present', () => {
-  const find = (pattern: RegExp) => prose.filter(({ value }) => pattern.test(value))
+describe('the audit catches what it is for (positive controls)', () => {
+  it.each([
+    ['a "#" Docker link', 'download.dockerHref', '#', /empty or placeholder/],
+    ['an http CTA link', 'hero.primaryHref', 'http://x', /allowed https origin/],
+    [
+      'a mistyped github host',
+      'links.repoUrl',
+      'https://gihub.com/Alexandryn/alexandryn',
+      /allowed https origin/,
+    ],
+    ['an anchor to a missing section', 'nav.downloadHref', '#nope', /no section/],
+    [
+      'an example.com link in a docs card',
+      'docs.cards[0].href',
+      'https://example.com/x',
+      /allowed https origin/,
+    ],
+    ['"no account"', 'hero.subline', 'Runs at home — no cloud, no account.', /no account/],
+    ['"without an account"', 'hero.subline', 'Use it without an account.', /no account/],
+    [
+      '"Nothing ever leaves your home"',
+      'features.privacy.body',
+      'Nothing ever leaves your home.',
+      /nothing/i,
+    ],
+    [
+      '"Open Library is never contacted"',
+      'features.privacy.body',
+      'Open Library is never contacted.',
+      /outside contact|never/i,
+    ],
+    [
+      'an optional login',
+      'features.privacy.body',
+      'A login is optional and TLS is never needed.',
+      /login|TLS/,
+    ],
+    [
+      'a stray older version',
+      'download.signingNote',
+      'Since v0.8.1 the installers are unsigned.',
+      /version v0\.8\.1/,
+    ],
+    [
+      'a hard-coded wrong version',
+      'howItWorks.steps[0].body',
+      'Install 1.0.1 today.',
+      /version 1\.0\.1/,
+    ],
+    ['an exclamation mark', 'download.heading', 'Ready to run your own library!', /exclamation/],
+  ])('rejects %s', (_label, path, value, expected) => {
+    const problems = audit(withValue(path, value))
+    expect(problems.join('\n')).toMatch(expected)
+  })
+})
 
-  it('mentions Docker in the hero subline', () => {
-    expect(site.hero.subline).toMatch(/Docker/)
+describe('load-bearing statements are present in full', () => {
+  it('says Docker is an option in the hero', () => {
+    expect(site.hero.subline).toMatch(/or on a home server with Docker/)
   })
 
-  it('says a login is always required and TLS is needed for public setups', () => {
-    const privacy = site.features.privacy.body
-    expect(privacy).toMatch(/login/i)
-    expect(privacy).toMatch(/TLS/)
+  it('says a login is always required and public setups also need TLS', () => {
+    expect(site.features.privacy.body).toMatch(/it always requires a login/)
+    expect(site.features.privacy.body).toMatch(/a publicly reachable setup also requires TLS/)
   })
 
-  it('discloses that Open Library is contacted', () => {
-    expect(find(/Open Library/).length).toBeGreaterThan(0)
-    expect(site.features.privacy.body).toMatch(/Open Library/)
+  it('discloses that Open Library is the one outside service contacted by default', () => {
+    expect(site.features.privacy.body).toMatch(
+      /By default the only outside service Alexandryn contacts is Open Library/,
+    )
   })
 
-  it('says the installers are not yet code-signed', () => {
-    expect(site.download.signingNote).toMatch(/not yet code-signed/)
+  it('says the installers are not yet code-signed and the OS will warn', () => {
+    expect(site.download.signingNote).toMatch(
+      /^The installers are not yet code-signed, so macOS and Windows will warn you/,
+    )
+  })
+
+  it('says "home network", not Wi-Fi, since a wired LAN works too', () => {
+    const text = collect(site)
+      .map((e) => e.value)
+      .join(' ')
+    expect(text).not.toMatch(/Wi-Fi/i)
   })
 })
 
 describe('version', () => {
-  it('is 1.0.0 and every visible version string derives from it', () => {
+  it('is 1.0.0 and the visible label derives from it', () => {
     expect(site.version).toBe('1.0.0')
     expect(site.download.versionLabel).toBe(`v${site.version}`)
-  })
-})
-
-describe('links', () => {
-  it('has links to check', () => {
-    expect(hrefs.length).toBeGreaterThan(10)
-  })
-
-  it('has no placeholder or empty links', () => {
-    for (const { value } of hrefs) {
-      expect(value, 'link is empty or "#"').not.toMatch(/^#?$/)
-    }
-  })
-
-  it('uses https for every external link', () => {
-    for (const { value } of hrefs.filter(({ value }) => !value.startsWith('#'))) {
-      expect(value).toMatch(/^https:\/\//)
-    }
-  })
-
-  it('points every in-page anchor at a section that exists', () => {
-    const anchors = new Set(Object.values(site.anchors))
-    for (const { value } of hrefs.filter(({ value }) => value.startsWith('#'))) {
-      expect(anchors, value).toContain(value.slice(1))
-    }
-  })
-
-  it('never points at the bare github.com host', () => {
-    for (const { value } of hrefs) expect(value).not.toMatch(/^https:\/\/github\.com\/?$/)
   })
 })
 
@@ -101,8 +196,19 @@ describe('structure', () => {
     ])
   })
 
+  it('points the API contract card at the OpenAPI specification itself', () => {
+    expect(site.docs.cards.at(-1)!.href).toMatch(/\/api\/openapi\.yaml$/)
+  })
+
   it('offers macOS, Windows, and Linux downloads', () => {
     expect(site.download.platforms.map((p) => p.name)).toEqual(['macOS', 'Windows', 'Linux'])
+  })
+
+  it('reuses the shared links in the footer instead of repeating them', () => {
+    const footerHrefs = site.footer.columns.flat().map((l) => l.href)
+    for (const url of [site.links.changelogUrl, site.links.licenseUrl, site.links.securityUrl]) {
+      expect(footerHrefs).toContain(url)
+    }
   })
 
   it('has three concepts, three steps, and four feature rows', () => {
@@ -111,8 +217,13 @@ describe('structure', () => {
     expect(Object.keys(site.features)).toHaveLength(4)
   })
 
-  it('uses only public-domain sample titles on the drawn book covers', () => {
-    const allowed = [
+  it('has ten distinct sample covers', () => {
+    expect(new Set(site.books.map((b) => b.title)).size).toBe(10)
+  })
+
+  it('uses only public-domain titles on the drawn covers', () => {
+    // An allowlist, not a snapshot: adding a cover means checking it is public domain.
+    const publicDomain = new Set([
       'Middlemarch',
       'Frankenstein',
       'Moby-Dick',
@@ -123,7 +234,11 @@ describe('structure', () => {
       'Dracula',
       'Wuthering Heights',
       'The Picture of Dorian Gray',
-    ]
-    expect(site.books.map((b) => b.title).sort()).toEqual([...allowed].sort())
+      'Emma',
+      'Alice’s Adventures in Wonderland',
+      'Treasure Island',
+      'The Time Machine',
+    ])
+    for (const { title } of site.books) expect(publicDomain, title).toContain(title)
   })
 })
