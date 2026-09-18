@@ -128,7 +128,7 @@ the ~5-file guideline in T1.
   - Files: `src/components/Features.tsx`, `src/components/TerminalPanel.tsx`,
     `src/components/Features.test.tsx`
 
-- [ ] **T11: Download and Documentation** (M)
+- [x] **T11: Download and Documentation** (M)
   - Acceptance: heading, three equal platform buttons (no platform detection, so
     the prerendered page never flickers) linking to the matching GitHub Releases
     asset page; version and Changelog link; a plain note that installers are

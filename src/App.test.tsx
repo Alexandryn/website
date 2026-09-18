@@ -56,6 +56,21 @@ describe('App', () => {
     })
   })
 
+  it('has no placeholder links: every href is https or points at a real element', () => {
+    const { container } = render(<App />)
+    const anchors = [...container.querySelectorAll('a')]
+    expect(anchors.length).toBeGreaterThan(10)
+    for (const a of anchors) {
+      const href = a.getAttribute('href') ?? ''
+      if (href.startsWith('#')) {
+        expect(href.length, `"${a.textContent}" links to a bare #`).toBeGreaterThan(1)
+        expect(container.querySelector(`[id="${href.slice(1)}"]`), href).not.toBeNull()
+      } else {
+        expect(href, a.textContent ?? '').toMatch(/^https:\/\//)
+      }
+    }
+  })
+
   it('renders no prose that is not in site.ts', () => {
     const { container } = render(<App />)
     expect(textNotFromSite(container)).toEqual([])

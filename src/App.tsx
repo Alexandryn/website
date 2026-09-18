@@ -1,5 +1,7 @@
 import { Concepts } from './components/Concepts.tsx'
 import { Features } from './components/Features.tsx'
+import { Docs } from './components/Docs.tsx'
+import { Download } from './components/Download.tsx'
 import { Footer } from './components/Footer.tsx'
 import { Hero } from './components/Hero.tsx'
 import { HowItWorks } from './components/HowItWorks.tsx'
@@ -21,6 +23,8 @@ export function App() {
         <Concepts concepts={site.concepts} />
         <HowItWorks howItWorks={site.howItWorks} />
         <Features features={site.features} books={site.books} />
+        <Download id={site.anchors.download} download={site.download} links={site.links} />
+        <Docs id={site.anchors.docs} docs={site.docs} />
       </main>
       <Footer name={site.name} footer={site.footer} />
     </>
