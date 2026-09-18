@@ -27,7 +27,7 @@ the ~5-file guideline in T1.
   - Depends on: T1
   - Files: `eslint.config.js`, `.prettierrc.json`, `src/test/setup.ts`, `src/App.test.tsx`
 
-- [ ] **T3: Licence, ignore rules, README** (XS)
+- [x] **T3: Licence, ignore rules, README** (XS)
   - Acceptance: `LICENSE` is the verbatim AGPL-3.0 text and `package.json`
     declares `AGPL-3.0-or-later`; `.gitignore` covers `node_modules`, `dist`,
     `test-results`, `playwright-report`, `.env*`; README states what the repo
