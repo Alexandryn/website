@@ -70,7 +70,7 @@ the ~5-file guideline in T1.
 
 ## Phase 3 — Sections (vertical slices)
 
-- [ ] **T6: Page shell: nav, footer, skip link, landmarks** (M)
+- [x] **T6: Page shell: nav, footer, skip link, landmarks** (M)
   - Acceptance: skip-to-content link is the first focusable element; sticky
     nav (wordmark, Documentation, GitHub, Download button) with the design's
     scroll-activated bottom border; footer with links and the licence line;
