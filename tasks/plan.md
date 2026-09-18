@@ -32,6 +32,10 @@ the plan gets `/agent-skills:ship` before anything is announced.
 - **Scripts run as plain TypeScript on Node ≥ 24** (type stripping), like
   `alexandryn/web/scripts`. No `ts-node`/`tsx` dependency.
 - **Fonts self-hosted** through `@fontsource/*`; no request leaves the origin.
+- **Prerender, then hydrate.** A client-only React page is blank without
+  JS. A small build step renders the page to HTML with `react-dom/server`
+  (already part of `react-dom`, no new dependency) and the client hydrates it.
+  Cost: components must not touch `window`/`document` during render.
 - **Static output, configurable base.** `vite build` with `base` from an env
   var, so GitHub Pages (`/website/`) and a custom domain (`/`) both work.
 - **Prettier settings match `alexandryn`** (`semi: false`, single quotes,
@@ -54,6 +58,7 @@ T1 toolchain ─ T2 lint/format/test harness ─ T3 licence/readme
                  │     └─ T11 Download + Docs
                  │
    CHECKPOINT B ─┤
+                 ├─ T12a prerender static HTML + hydrate
                  ├─ T12 e2e: axe, keyboard, responsive
                  ├─ T13 static checks: links, bundle size
                  │
@@ -95,6 +100,7 @@ Summary:
 ### Checkpoint B
 
 ### Phase 4 — Verification
+- T12a Prerender the page at build time
 - T12 Playwright: axe, keyboard, responsive
 - T13 Static checks: links and bundle size
 

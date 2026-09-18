@@ -96,6 +96,7 @@ Unit tests:   npm test                 # vitest run
 E2E + axe:    npx playwright test
 Contrast:     npm run check:contrast   # token pairs vs WCAG AA
 Links:        npm run check:links      # no href="#" placeholders, no empty hrefs
+Prerender:    npm run build            # runs scripts/prerender.ts after vite build
 Bundle size:  npm run check:bundle-size
 ```
 
@@ -115,7 +116,7 @@ website/
   public/
     screenshots/             optimised app screenshots (WebP + fallback)
   e2e/                       Playwright specs (a11y, keyboard, viewports)
-  scripts/                   check-contrast, check-links, check-bundle-size
+  scripts/                   check-contrast, check-links, check-bundle-size, prerender
   LICENSE                    AGPL-3.0-or-later
 ```
 
@@ -221,8 +222,11 @@ screenshots of the app** inside them (library view, reader, phone view).
 6. The version shown is `1.0.0`, from one constant.
 7. Screenshots are real, sample-data only, have alt text and explicit
    dimensions, and cause no layout shift.
-8. Total JS ≤ 60 KiB gzipped; page interactive without JS-dependent content
-   (the page is meaningful with JS disabled or slow).
+8. Total JS ≤ 90 KiB gzipped (measured baseline: React 19 + react-dom is
+   68.6 KiB of that, so the original 60 KiB guess was unachievable), and the
+   built `index.html` contains the full page content — prerendered at build
+   time and hydrated — so the page is readable with JavaScript disabled or
+   slow. (Corrected 2026-09-18 after measuring the T1 stub.)
 9. Every link resolves once the repository is public and v1.0.0 is released
    (verified manually at launch; the automated check covers placeholders only).
 
