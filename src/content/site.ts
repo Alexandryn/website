@@ -29,6 +29,7 @@ export const site = {
   links,
 
   nav: {
+    ariaLabel: 'Primary',
     skipLabel: 'Skip to content',
     links: [
       { label: 'Documentation', href: `#${anchors.docs}` },
@@ -163,6 +164,7 @@ export const site = {
   },
 
   footer: {
+    ariaLabel: 'Footer',
     description:
       'A self-hosted digital library for your home network. Runs on your desktop or on a home server; readable from any device on your network.',
     columns: [
@@ -194,3 +196,5 @@ export const site = {
     { title: 'The Picture of Dorian Gray', bg: '#4e4030', fg: '#efe6d8' },
   ],
 } as const
+
+export type Site = typeof site
