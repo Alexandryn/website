@@ -4,6 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import { site } from '../src/content/site.ts'
 import {
   TEXT_PAIRS,
   checkPairs,
@@ -240,4 +241,13 @@ describe('the CLI', () => {
     expect(result.status).toBe(1)
     expect(result.stderr).toMatch(/check-contrast: failed/)
   })
+})
+
+describe('the drawn book covers', () => {
+  it.each(site.books.map((b) => [b.title, b.fg, b.bg] as const))(
+    '%s has readable title text (4.5:1)',
+    (_title, fg, bg) => {
+      expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(4.5)
+    },
+  )
 })

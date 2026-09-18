@@ -76,6 +76,10 @@ the ~5-file guideline in T1.
     scroll-activated bottom border; footer with links and the licence line;
     `<header>`, `<main>`, `<footer>` landmarks; scroll listener is passive and
     removed on unmount.
+  - Also: replace the vacuous smoke test in `App.test.tsx` with a page-level
+    check that runs the content audit's forbidden-string list over
+    `document.body.textContent` and asserts every `site.*` link appears as an
+    anchor, so prose hard-coded in JSX cannot bypass the copy tests.
   - Verify: `npm test` (nav border toggles on scroll; skip link first in tab
     order; landmarks present) and visual check in `npm run dev`
   - Depends on: T4, T5
@@ -129,6 +133,9 @@ the ~5-file guideline in T1.
     not yet code-signed and the OS will warn on first launch; a Docker/
     self-hosting link; Documentation section with the four guides + API
     contract; every link is a real URL.
+  - Note: all three platform buttons use `releases/latest` until asset names
+    exist; `/latest` 404s if only pre-releases are published, so v1.0.0 must
+    be a full release. Per-platform asset links are a follow-up.
   - Verify: `npm test`; `npm run check:links` (after T13)
   - Depends on: T6
   - Files: `src/components/Download.tsx`, `src/components/Docs.tsx`,
@@ -148,6 +155,8 @@ the ~5-file guideline in T1.
     entry uses `hydrateRoot`; nothing in the component tree touches `window`
     or `document` during render; `dist/index.html` contains the `h1`, all
     section headings, and every link without running JavaScript.
+  - Note: `scripts/prerender.ts` needs JSX and DOM libs, so give it its own
+    tsconfig (or move it under `src/`); `tsconfig.node.json` has neither.
   - Verify: `npm test` (built HTML contains headings and links) and
     `npm run build`; open `dist/index.html` with JS disabled and confirm the
     page reads
