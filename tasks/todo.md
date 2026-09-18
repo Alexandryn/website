@@ -51,7 +51,7 @@ the ~5-file guideline in T1.
   - Files: `src/styles/index.css`, `scripts/check-contrast.ts`,
     `scripts/check-contrast.test.ts`, `src/main.tsx`, `package.json`
 
-- [ ] **T5: `content/site.ts` and copy-accuracy tests** (S)
+- [x] **T5: `content/site.ts` and copy-accuracy tests** (S)
   - Acceptance: one typed module exports version (`1.0.0`), platform
     download links, docs cards (Self-hosting, Administration, Security,
     Updating, API contract), nav/footer links, and every section's prose
@@ -123,8 +123,8 @@ the ~5-file guideline in T1.
     `src/components/Features.test.tsx`
 
 - [ ] **T11: Download and Documentation** (M)
-  - Acceptance: heading, three platform buttons (detected platform primary if
-    detectable, otherwise all equal) linking to the matching GitHub Releases
+  - Acceptance: heading, three equal platform buttons (no platform detection, so
+    the prerendered page never flickers) linking to the matching GitHub Releases
     asset page; version and Changelog link; a plain note that installers are
     not yet code-signed and the OS will warn on first launch; a Docker/
     self-hosting link; Documentation section with the four guides + API
