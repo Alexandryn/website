@@ -41,7 +41,9 @@ export function Download({
         <p className="mt-3.5 text-sm text-ink-2">{download.signingNote}</p>
         <p className="mt-3.5 text-sm text-ink-2">
           {download.dockerLead}
-          <a href={download.dockerHref}>{download.dockerLinkLabel}</a>
+          <a href={download.dockerHref} className="underline underline-offset-3">
+            {download.dockerLinkLabel}
+          </a>
         </p>
       </div>
     </section>

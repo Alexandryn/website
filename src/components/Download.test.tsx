@@ -46,4 +46,11 @@ describe('Download', () => {
     expect(link).toHaveAttribute('href', site.download.dockerHref)
     expect(link.closest('p')).toHaveTextContent(site.download.dockerLead.trim())
   })
+
+  it('underlines the links inside running text, so they do not rely on colour alone', () => {
+    renderDownload()
+    for (const name of [site.download.changelogLabel, site.download.dockerLinkLabel]) {
+      expect(screen.getByRole('link', { name })).toHaveClass('underline')
+    }
+  })
 })

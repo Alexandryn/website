@@ -17,7 +17,10 @@ export function DeviceMockup({
       data-device-mockup
       className="mx-auto mt-16 flex max-w-[1160px] flex-wrap items-end justify-center"
     >
-      <div data-device="laptop" className="w-[min(640px,88vw)] flex-none">
+      <div
+        data-device="laptop"
+        className="w-full max-w-[640px] flex-none md:w-[min(640px,calc(100%-88px))]"
+      >
         <div className="rounded-[14px_14px_4px_4px] bg-ink px-2.5 pt-2.5 shadow-lift">
           <div className="overflow-hidden rounded-t-lg bg-paper">
             <div className="flex items-center gap-2 border-b border-line px-3.5 py-[9px]">
