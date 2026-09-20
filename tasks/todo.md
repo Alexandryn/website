@@ -224,12 +224,18 @@ the ~5-file guideline in T1.
   - Files: `src/components/DeviceMockup.tsx`, `src/components/Features.tsx`,
     `src/content/site.ts`, `src/components/DeviceMockup.test.tsx`
 
-- [ ] **T16: GitHub Pages workflow** (S)
+- [x] **T16: GitHub Pages workflow** (S)
   - Acceptance: build honours a `BASE_PATH` env var; a workflow builds and
     deploys `dist/` to Pages using SHA-pinned actions and least-privilege
     `permissions`; documented as unverified until Actions billing is restored.
   - Verify: `BASE_PATH=/website/ npm run build` produces correct asset URLs;
     workflow YAML parses; `actionlint` if available
+  - Result: no `BASE_PATH` needed. The build uses relative asset URLs
+    (`base: './'`), so it works at a domain root and under a project path; the
+    prerender check fails the build on a root-absolute path. Workflow YAML
+    parses; `actionlint` is not installed here, and the workflow has never run
+    because Actions billing is blocked. Actions are pinned to SHAs resolved with
+    `gh api` from each action's latest release tag.
   - Depends on: T1
   - Files: `.github/workflows/pages.yml`, `vite.config.ts`
 
