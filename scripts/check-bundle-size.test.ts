@@ -69,6 +69,10 @@ describe('the CLI', () => {
     expect(run(dist({})).status).toBe(1)
   })
 
+  it('rejects --limit-kib given without a value instead of using the default', () => {
+    expect(run(dist({ 'assets/a.js': 'x' }), '--limit-kib').status).toBe(1)
+  })
+
   it('rejects a limit that is not a positive number', () => {
     expect(run(dist({ 'assets/a.js': 'x' }), '--limit-kib', 'abc').status).toBe(1)
   })

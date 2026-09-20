@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 const decode = (value: string) => value.replaceAll('&amp;', '&')
@@ -9,18 +9,27 @@ interface Anchor {
   rel: string
 }
 
+// A tag's attribute text: quoted values may contain ">", so they are matched whole.
+const TAG_BODY = String.raw`((?:"[^"]*"|'[^']*'|[^>"'])*)`
+
+function parseAttributes(text: string): Map<string, string> {
+  const attrs = new Map<string, string>()
+  const pattern = /([^\s"'<>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g
+  for (const attr of text.matchAll(pattern)) {
+    attrs.set(attr[1]!.toLowerCase(), decode(attr[2] ?? attr[3] ?? attr[4] ?? ''))
+  }
+  return attrs
+}
+
 function anchors(html: string): Anchor[] {
   const found: Anchor[] = []
   // `<a` followed by whitespace or `>` so <abbr> and <article> do not match.
-  for (const tag of html.matchAll(/<a(?=[\s>])([^>]*)>/g)) {
-    const attrs = new Map<string, string>()
-    for (const attr of tag[1]!.matchAll(/([a-zA-Z][\w-]*)(?:="([^"]*)")?/g)) {
-      attrs.set(attr[1]!.toLowerCase(), decode(attr[2] ?? ''))
-    }
+  for (const tag of html.matchAll(new RegExp(`<a(?=[\\s>])${TAG_BODY}>`, 'gi'))) {
+    const attrs = parseAttributes(tag[1]!)
     found.push({
       href: attrs.get('href'),
-      target: attrs.get('target'),
-      rel: attrs.get('rel') ?? '',
+      target: attrs.get('target')?.toLowerCase(),
+      rel: attrs.get('rel')?.toLowerCase() ?? '',
     })
   }
   return found
@@ -58,7 +67,7 @@ export function findLinkProblems(html: string): string[] {
             `${href}: only https links (or #anchors) are allowed, found scheme ${url.protocol}`,
           )
         }
-        if (PLACEHOLDER_HOST.test(url.hostname)) {
+        if (PLACEHOLDER_HOST.test(url.hostname.replace(/\.$/, ''))) {
           problems.push(`${href} points at ${url.hostname}, a placeholder host`)
         }
       }
@@ -68,6 +77,37 @@ export function findLinkProblems(html: string): string[] {
     }
   }
   return problems
+}
+
+const REQUEST_ATTRIBUTES = ['href', 'src', 'srcset', 'action', 'formaction', 'poster', 'data']
+const ABSOLUTE = /^\s*(?:https?:)?\/\//i
+const CSS_ABSOLUTE_URL = /url\(\s*(["']?)\s*((?:https?:)?\/\/[^)"']*)\1\s*\)/gi
+const CSS_ABSOLUTE_IMPORT = /@import\s+(["'])\s*((?:https?:)?\/\/[^"']*)\1/gi
+
+/**
+ * Resources the page would fetch from another origin: anything but an <a> link
+ * that points off-site, and any absolute url() in CSS. Links only navigate when
+ * clicked, so they are not requests. SPEC success criterion 1: no third-party origin.
+ */
+export function findThirdPartyResources(source: string, kind: 'html' | 'css' = 'html'): string[] {
+  const found: string[] = []
+  if (kind === 'css') {
+    for (const m of source.matchAll(CSS_ABSOLUTE_URL)) found.push(`url(${m[2]}) in CSS`)
+    for (const m of source.matchAll(CSS_ABSOLUTE_IMPORT)) found.push(`@import ${m[2]} in CSS`)
+    return found
+  }
+  for (const tag of source.matchAll(new RegExp(`<(?!a[\\s>])([a-z][\\w-]*)${TAG_BODY}>`, 'gi'))) {
+    const attrs = parseAttributes(tag[2]!)
+    if (tag[1]!.toLowerCase() === 'link' && /canonical/.test(attrs.get('rel') ?? '')) continue
+    for (const name of REQUEST_ATTRIBUTES) {
+      const value = attrs.get(name)
+      if (value !== undefined && ABSOLUTE.test(value)) found.push(`<${tag[1]} ${name}="${value}">`)
+    }
+    for (const m of (attrs.get('style') ?? '').matchAll(CSS_ABSOLUTE_URL)) {
+      found.push(`<${tag[1]} style> loads ${m[2]}`)
+    }
+  }
+  return found
 }
 
 /** Each external https URL once, in page order, with anchors left out. */
@@ -128,6 +168,19 @@ async function main(argv: string[]): Promise<number> {
     return 1
   }
   const problems = findLinkProblems(html)
+  for (const resource of findThirdPartyResources(html)) {
+    problems.push(`third-party resource: ${resource}`)
+  }
+  const assets = join(dir, 'assets')
+  const stylesheets = existsSync(assets)
+    ? readdirSync(assets).filter((n) => n.endsWith('.css'))
+    : []
+  for (const name of stylesheets) {
+    const css = readFileSync(join(assets, name), 'utf8')
+    for (const resource of findThirdPartyResources(css, 'css')) {
+      problems.push(`third-party resource: ${resource} (${name})`)
+    }
+  }
   if (argv.includes('--strict')) problems.push(...(await checkReachable(externalUrls(html))))
   if (problems.length > 0) {
     console.error('check-links: failed')

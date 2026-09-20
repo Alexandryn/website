@@ -13,16 +13,20 @@ Node.js 24 or later.
 
 ## Commands
 
-| Command                | What it does                                   |
-| ---------------------- | ---------------------------------------------- |
-| `npm ci`               | Install dependencies                           |
-| `npm run dev`          | Start the development server                   |
-| `npm run build`        | Typecheck and build the static site to `dist/` |
-| `npm run preview`      | Serve the built site locally                   |
-| `npm run typecheck`    | Typecheck only                                 |
-| `npm run lint`         | ESLint, including accessibility rules          |
-| `npm run format:check` | Prettier check                                 |
-| `npm test`             | Unit and component tests                       |
+| Command                     | What it does                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `npm ci`                    | Install dependencies                                                                    |
+| `npm run dev`               | Start the development server                                                            |
+| `npm run build`             | Typecheck and build the static site to `dist/`                                          |
+| `npm run preview`           | Serve the built site locally                                                            |
+| `npm run typecheck`         | Typecheck only                                                                          |
+| `npm run lint`              | ESLint, including accessibility rules                                                   |
+| `npm run format:check`      | Prettier check                                                                          |
+| `npm test`                  | Unit and component tests                                                                |
+| `npm run test:e2e`          | Playwright: axe, keyboard, layout, no-JS                                                |
+| `npm run check:contrast`    | Colour contrast of the theme and of every text-colour class                             |
+| `npm run check:links`       | Links, anchors, third-party resources in `dist/` (`-- --strict` also requests each URL) |
+| `npm run check:bundle-size` | Gzipped JS against the 90 KiB budget                                                    |
 
 ## How it is built
 

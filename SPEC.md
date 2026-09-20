@@ -82,6 +82,14 @@ line). Text uses `--tx2` (`#6E6B66`, 4.87:1 on the background, 4.62:1 on
 - Dev: Vitest 4, `@testing-library/react`, ESLint (+ `jsx-a11y`), Prettier,
   Playwright, `@axe-core/playwright`.
 
+Recorded reasons for the dev-only additions (constitution §9). Neither is
+imported from `src/`, so neither can reach `dist/`.
+
+| Package | What it does | Why not stdlib or jsdom | What breaks if abandoned |
+| --- | --- | --- | --- |
+| `@playwright/test` | Drives Chromium, Firefox and WebKit against the built page | jsdom has no layout, so it cannot check overflow, real tab order, focus outlines, or reduced motion | The `e2e/` suite; the site is unaffected |
+| `@axe-core/playwright` | Runs axe-core's WCAG rules in that real page | Hand-written accessibility rules would cover far less and go stale | The axe spec; keyboard and layout specs still run |
+
 ## Commands
 
 ```
