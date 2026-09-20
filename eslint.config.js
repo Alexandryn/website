@@ -8,7 +8,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig(
-  { ignores: ['dist', 'playwright-report', 'test-results'] },
+  { ignores: ['dist', 'dist-ssr', 'playwright-report', 'test-results'] },
   {
     extends: [
       js.configs.recommended,
