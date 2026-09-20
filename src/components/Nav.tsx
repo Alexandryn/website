@@ -22,6 +22,7 @@ export function Nav({ name, nav }: { name: string; nav: Site['nav'] }) {
   const scrolled = useScrolled()
   return (
     <header
+      data-scrolled={scrolled}
       className={`top-0 z-50 border-b bg-paper px-[clamp(20px,5vw,64px)] min-[480px]:sticky transition-colors duration-200 motion-reduce:transition-none ${
         scrolled ? 'border-line' : 'border-transparent'
       }`}
@@ -31,7 +32,11 @@ export function Nav({ name, nav }: { name: string; nav: Site['nav'] }) {
         <div className="flex-1" />
         <nav aria-label={nav.ariaLabel} className="flex flex-wrap items-center gap-4 sm:gap-[26px]">
           {nav.links.map((link) => (
-            <a key={link.label} href={link.href} className="text-sm text-ink-2">
+            <a
+              key={link.label}
+              href={link.href}
+              className="inline-flex min-h-8 items-center text-sm text-ink-2"
+            >
               {link.label}
             </a>
           ))}

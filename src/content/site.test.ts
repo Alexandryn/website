@@ -138,6 +138,16 @@ describe('load-bearing statements are present in full', () => {
     )
   })
 
+  it('says network access has to be turned on before other devices can reach the library', () => {
+    expect(site.hero.subline).toMatch(/once you turn network access on/)
+    expect(site.howItWorks.steps[2]!.body).toMatch(/turn on network access/i)
+  })
+
+  it('says books are read from where they are, with no copy kept', () => {
+    expect(site.features.openSource.body).toMatch(/reads your books from where they already are/)
+    expect(site.features.openSource.body).toMatch(/does not keep its own copy/)
+  })
+
   it('says the installers are not yet code-signed and the OS will warn', () => {
     expect(site.download.signingNote).toMatch(
       /^The installers are not yet code-signed, so macOS and Windows will warn you/,

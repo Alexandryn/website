@@ -3,7 +3,8 @@ import type { Site } from '../content/site.ts'
 
 // Break opportunities after a slash (but not between the two in "https://"),
 // so a narrow screen wraps a URL at its path segments instead of mid-word.
-const afterSlash = (text: string) => text.split(/(?<=\/)(?!\/)/)
+// Written without lookbehind, which older Safari rejects at parse time.
+const afterSlash = (text: string) => text.match(/[^/]*\/+|[^/]+$/g) ?? [text]
 
 /**
  * A terminal window showing how to clone the repository. The `$` prompt is
@@ -24,6 +25,7 @@ export function TerminalPanel({ openSource }: { openSource: Site['features']['op
       <div className="font-mono text-xs leading-[1.7] text-terminal-text">
         <div
           data-terminal-line="command"
+          data-prompt
           className="before:text-terminal-prompt before:content-['$_']"
         >
           {afterSlash(openSource.terminalCommand).map((part, i) => (

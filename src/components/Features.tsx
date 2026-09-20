@@ -36,6 +36,7 @@ export function Features({
           body={features.openSource.body}
           visual={<TerminalPanel openSource={features.openSource} />}
           visualFirst
+          decorative={false}
         />
       </div>
     </section>

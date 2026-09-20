@@ -14,11 +14,12 @@ describe('Features: library view and read-on-any-device', () => {
     }
   })
 
-  it('hides every illustration from assistive technology', () => {
+  it('hides the decorative illustrations from assistive technology', () => {
     const { container } = renderFeatures()
-    const visuals = container.querySelectorAll('[data-feature-visual]')
-    expect(visuals.length).toBeGreaterThanOrEqual(2)
-    for (const visual of visuals) expect(visual).toHaveAttribute('aria-hidden', 'true')
+    for (const name of ['library', 'devices', 'privacy']) {
+      const visual = container.querySelector(`[data-visual="${name}"]`)!
+      expect(visual.closest('[data-feature-visual]'), name).toHaveAttribute('aria-hidden', 'true')
+    }
   })
 
   it('draws the library panel with filter and sort chips, a count, and all ten covers', () => {
@@ -51,11 +52,11 @@ describe('Features: library view and read-on-any-device', () => {
     )
   })
 
-  it('flips the second row so its illustration comes first, as in the prototype', () => {
+  it('puts the illustration first in the second row only, as in the prototype', () => {
     const { container } = renderFeatures()
     const rows = container.querySelectorAll('[data-feature-row]')
-    expect(rows[0]).toHaveClass('flex-wrap')
-    expect(rows[1]).toHaveClass('flex-wrap-reverse')
+    expect(rows[0]).toHaveAttribute('data-visual-first', 'false')
+    expect(rows[1]).toHaveAttribute('data-visual-first', 'true')
   })
 })
 
@@ -82,30 +83,37 @@ describe('Features: privacy and open source', () => {
     const { terminalCommand, terminalCaption, terminalNote } = site.features.openSource
     const command = within(panel).getByText(terminalCommand)
     expect(command).toHaveAttribute('data-terminal-line', 'command')
-    expect(command.className).toContain("before:content-['$_']")
+    expect(command).toHaveAttribute('data-prompt', 'true')
     for (const text of [terminalCaption, terminalNote]) {
-      expect(within(panel).getByText(text).className).not.toContain('before:content')
+      expect(within(panel).getByText(text)).not.toHaveAttribute('data-prompt')
     }
   })
 
-  it('lets a long command wrap only after a slash, never mid-word', () => {
+  it('offers a line-break opportunity after each path slash and keeps the text intact', () => {
     const { container } = renderFeatures()
     const command = container.querySelector<HTMLElement>('[data-terminal-line="command"]')!
     // git clone https:// | github.com/ | Alexandryn/ | alexandryn.git
     expect(command.querySelectorAll('wbr')).toHaveLength(3)
-    expect(command.className).not.toContain('break-all')
     expect(command.textContent).toBe(site.features.openSource.terminalCommand)
+    // Whether it really wraps mid-word is a layout question; the 320px Playwright spec covers it.
+  })
+
+  it('leaves the clone command available to screen readers, since users would run it', () => {
+    const { container } = renderFeatures()
+    const panel = container.querySelector('[data-visual="terminal"]')!
+    expect(panel.closest('[aria-hidden="true"]')).toBeNull()
+    expect(panel.closest('[data-feature-visual]')).not.toHaveAttribute('aria-hidden')
   })
 
   it('clones the real repository', () => {
     expect(site.features.openSource.terminalCommand).toBe(`git clone ${site.links.cloneUrl}`)
   })
 
-  it('wraps the last row in reverse, like the second', () => {
+  it('puts the illustration first in the last row, like the second', () => {
     const { container } = renderFeatures()
     const rows = container.querySelectorAll('[data-feature-row]')
     expect(rows).toHaveLength(4)
-    expect(rows[2]).toHaveClass('flex-wrap')
-    expect(rows[3]).toHaveClass('flex-wrap-reverse')
+    expect(rows[2]).toHaveAttribute('data-visual-first', 'false')
+    expect(rows[3]).toHaveAttribute('data-visual-first', 'true')
   })
 })

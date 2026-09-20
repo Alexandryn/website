@@ -4,27 +4,35 @@ import type { ReactNode } from 'react'
  * One text-and-illustration row. With `visualFirst` the illustration comes
  * first in the DOM and the row wraps in reverse, so on a wide screen it sits
  * on the left and once the row wraps the text still comes first. The
- * illustration is decorative, so the order does not change what is announced.
+ * illustration is hidden from assistive technology unless `decorative` is false.
  */
 export function FeatureRow({
   title,
   body,
   visual,
   visualFirst = false,
+  decorative = true,
 }: {
   title: string
   body: string
   visual: ReactNode
   visualFirst?: boolean
+  /** False when the illustration carries content a reader would use, such as a command. */
+  decorative?: boolean
 }) {
   const illustration = (
-    <div aria-hidden="true" data-feature-visual className="min-w-[280px] flex-1">
+    <div
+      aria-hidden={decorative ? true : undefined}
+      data-feature-visual
+      className="min-w-[280px] flex-1"
+    >
       {visual}
     </div>
   )
   return (
     <div
       data-feature-row
+      data-visual-first={visualFirst}
       className={`flex items-center gap-[clamp(28px,5vw,56px)] ${visualFirst ? 'flex-wrap-reverse' : 'flex-wrap'}`}
     >
       {visualFirst && illustration}

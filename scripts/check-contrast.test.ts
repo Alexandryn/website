@@ -127,6 +127,11 @@ describe('the site theme', () => {
     expect(checkPairs(colors, TEXT_PAIRS)).toEqual([])
   })
 
+  it('finds no colour violation anywhere in the real src tree', () => {
+    const srcDir = join(import.meta.dirname, '../src')
+    expect(findColourViolations(srcDir, colors, allowedText)).toEqual([])
+  })
+
   it('keeps ink-3 out of the allowed text pairs because it fails AA', () => {
     expect(allowedText).not.toContain('ink-3')
     expect(contrastRatio(colors['ink-3']!, colors['paper']!)).toBeLessThan(4.5)

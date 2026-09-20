@@ -33,27 +33,24 @@ describe('Nav', () => {
     )
   })
 
-  it('has a transparent bottom border at the top of the page', () => {
+  it('is not scrolled at the top of the page', () => {
     renderNav()
-    const header = screen.getByRole('banner')
-    expect(header).toHaveClass('border-transparent')
-    expect(header).not.toHaveClass('border-line')
+    expect(screen.getByRole('banner')).toHaveAttribute('data-scrolled', 'false')
   })
 
-  it('shows the border once the page scrolls, and hides it again at the top', () => {
+  it('marks itself scrolled once the page scrolls, and clears it again at the top', () => {
     renderNav()
     const header = screen.getByRole('banner')
     scrollTo(40)
-    expect(header).toHaveClass('border-line')
-    expect(header).not.toHaveClass('border-transparent')
+    expect(header).toHaveAttribute('data-scrolled', 'true')
     scrollTo(2)
-    expect(header).toHaveClass('border-transparent')
+    expect(header).toHaveAttribute('data-scrolled', 'false')
   })
 
-  it('shows the border immediately when mounted on an already-scrolled page', () => {
+  it('is scrolled immediately when mounted on an already-scrolled page', () => {
     Object.defineProperty(window, 'scrollY', { value: 300, configurable: true })
     renderNav()
-    expect(screen.getByRole('banner')).toHaveClass('border-line')
+    expect(screen.getByRole('banner')).toHaveAttribute('data-scrolled', 'true')
   })
 
   it('listens for scroll passively and removes the listener on unmount', () => {

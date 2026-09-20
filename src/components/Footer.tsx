@@ -7,7 +7,9 @@ export function Footer({ name, footer }: { name: string; footer: Site['footer'] 
         <div className="flex flex-wrap justify-between gap-8 pb-8">
           <div className="max-w-[320px]">
             <p className="mb-2 text-base font-semibold tracking-[-0.01em]">{name}</p>
-            <p className="text-sm text-ink-2">{footer.description}</p>
+            <p className="inline-flex min-h-8 items-center text-sm text-ink-2">
+              {footer.description}
+            </p>
           </div>
           <nav aria-label={footer.ariaLabel} className="flex flex-wrap gap-10">
             {footer.columns.map((column) => (

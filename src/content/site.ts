@@ -44,7 +44,7 @@ export const site = {
     headlineEmphasis: 'at home',
     headlineEnd: '.',
     subline:
-      'Runs on your desktop, or on a home server with Docker. Your books, readable from your tablet, phone, or any other device on your home network — no cloud service, no third-party account.',
+      'Runs on your desktop, or on a home server with Docker. Your books, readable from any device on your home network once you turn network access on — no cloud service, no third-party account.',
     primaryLabel: 'Download',
     primaryHref: `#${anchors.download}`,
     secondaryLabel: 'Read the docs',
@@ -87,7 +87,7 @@ export const site = {
       {
         number: '03',
         title: 'Read anywhere',
-        body: 'Open the web reader on any device on your home network.',
+        body: 'Turn on network access, then open the web reader on any device on your home network.',
       },
     ],
   },
@@ -115,7 +115,7 @@ export const site = {
     },
     openSource: {
       title: 'Open source',
-      body: 'Licensed AGPL-3.0-or-later. Your books stay as ordinary files in your own folders, and your reading data can be exported.',
+      body: 'Licensed AGPL-3.0-or-later. Alexandryn reads your books from where they already are and does not keep its own copy, and your reading data can be exported.',
       terminalCommand: `git clone ${repo}.git`,
       terminalCaption: 'License: AGPL-3.0-or-later',
       terminalNote: 'Your books, your server.',
