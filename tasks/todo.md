@@ -199,7 +199,7 @@ the ~5-file guideline in T1.
 
 ## Phase 5 — Screenshots and release wiring
 
-- [ ] **T14: Screenshot capture (spike, then script)** (M)
+- [x] **T14: Screenshot capture (spike, then script)** (M)
   - Acceptance: time-boxed spike picks the capture approach (see plan risks)
     and records the decision in `scripts/README.md`; a public-domain sample
     library (e.g. Middlemarch, Frankenstein, Moby-Dick, Pride and Prejudice,
@@ -208,6 +208,8 @@ the ~5-file guideline in T1.
     metadata; nothing personal or in-copyright is shown.
   - Verify: run the script against `alexandryn/web`'s dev server; open each
     output and check it by eye
+  - Result: chose blocking the service worker + `context.route` (see
+    `scripts/README.md`). WebP is encoded by the browser, so no image dependency.
   - Depends on: T1 (independent of T6–T13)
   - Files: `scripts/capture-screenshots.ts`, `scripts/sample-library.json`,
     `scripts/README.md`, `public/screenshots/*`
