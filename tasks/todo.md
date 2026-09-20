@@ -166,13 +166,16 @@ the ~5-file guideline in T1.
   - Files: `scripts/prerender.ts`, `scripts/prerender.test.ts`, `src/main.tsx`,
     `src/entry-server.tsx`, `package.json`
 
-- [ ] **T12: Playwright — axe, keyboard, responsive** (M)
+- [x] **T12: Playwright — axe, keyboard, responsive** (M)
   - Acceptance: zero axe violations at 320, 768, 1280 px; one `h1`, no skipped
     heading levels; Tab order reaches every link/button in reading order with
     visible focus, skip link works; no horizontal scroll at 320 px;
     `prefers-reduced-motion` honoured.
   - Verify: `npx playwright test` (Chromium + Firefox; WebKit where the host
     allows it — note any gap plainly)
+  - Result: Chromium and Firefox pass (32 tests). WebKit could not run on this
+    host (missing system libraries for Playwright's WebKit build), so Safari
+    is untested here; the config still lists it for a host that can run it.
   - Depends on: Checkpoint B
   - Files: `playwright.config.ts`, `e2e/a11y.spec.ts`, `e2e/keyboard.spec.ts`,
     `e2e/responsive.spec.ts`
