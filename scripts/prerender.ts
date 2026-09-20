@@ -15,13 +15,12 @@ export function inject(html: string, markup: string): string {
 }
 
 // A meta tag cannot set frame-ancestors, and GitHub Pages sends no headers, so this is
-// defence in depth for a page that has no inputs. Inline styles are allowed only as
-// attributes, for the per-cover colours; script and <style> stay locked to same-origin files.
+// defence in depth for a page that has no inputs. Everything is locked to same-origin files,
+// including styles: the page has no inline style attributes.
 const CSP = [
   "default-src 'none'",
   "script-src 'self'",
   "style-src 'self'",
-  "style-src-attr 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self'",
   "connect-src 'none'",

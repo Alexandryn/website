@@ -201,28 +201,15 @@ describe('structure', () => {
     expect(Object.keys(site.features)).toHaveLength(4)
   })
 
-  it('has ten distinct sample covers', () => {
-    expect(new Set(site.books.map((b) => b.title)).size).toBe(10)
+  it('describes each screenshot in a sentence, without calling it a screenshot or an image', () => {
+    for (const [name, shot] of Object.entries(site.screenshots)) {
+      expect(shot.alt.length, name).toBeGreaterThan(30)
+      expect(shot.alt, name).not.toMatch(/screenshot|image of|picture of/i)
+    }
   })
 
-  it('uses only public-domain titles on the drawn covers', () => {
-    // An allowlist, not a snapshot: adding a cover means checking it is public domain.
-    const publicDomain = new Set([
-      'Middlemarch',
-      'Frankenstein',
-      'Moby-Dick',
-      'Pride and Prejudice',
-      'Walden',
-      'Jane Eyre',
-      'Great Expectations',
-      'Dracula',
-      'Wuthering Heights',
-      'The Picture of Dorian Gray',
-      'Emma',
-      'Alice’s Adventures in Wonderland',
-      'Treasure Island',
-      'The Time Machine',
-    ])
-    for (const { title } of site.books) expect(publicDomain, title).toContain(title)
+  it('says the reader shows Moby-Dick, which is public domain', () => {
+    expect(site.screenshots.readerDesktop.alt).toMatch(/Moby-Dick/)
+    expect(site.screenshots.readerPhone.alt).toMatch(/Moby-Dick/)
   })
 })

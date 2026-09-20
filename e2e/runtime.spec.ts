@@ -23,13 +23,23 @@ test('requests nothing from any origin but its own', async ({ page, baseURL }) =
   expect([...origins]).toEqual([new URL(baseURL!).origin])
 })
 
-test('the strict policy still lets the drawn covers keep their colours', async ({ page }) => {
+test('every image loads under the strict policy and is not broken', async ({ page }) => {
   await page.goto('/')
-  const backgrounds = await page
-    .locator('[data-cover]')
-    .evaluateAll((els) => els.map((el) => getComputedStyle(el).backgroundColor))
-  expect(backgrounds.length).toBeGreaterThan(5)
-  for (const colour of backgrounds) expect(colour).not.toBe('rgba(0, 0, 0, 0)')
+  await page.locator('img').last().scrollIntoViewIfNeeded()
+  await page.waitForLoadState('networkidle')
+  const images = await page.locator('img').evaluateAll((els) =>
+    els.map((el) => ({
+      src: (el as HTMLImageElement).currentSrc,
+      width: (el as HTMLImageElement).naturalWidth,
+    })),
+  )
+  expect(images.length).toBe(5)
+  for (const image of images) expect(image.width, image.src).toBeGreaterThan(0)
+})
+
+test('has no inline style attributes, which the policy would block', async ({ page }) => {
+  await page.goto('/')
+  expect(await page.locator('[style]').count()).toBe(0)
 })
 
 test.describe('without JavaScript', () => {

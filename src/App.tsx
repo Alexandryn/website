@@ -19,10 +19,10 @@ export function App() {
       </a>
       <Nav name={site.name} nav={site.nav} />
       <main id={site.anchors.main} tabIndex={-1} className="outline-none">
-        <Hero hero={site.hero} books={site.books} />
+        <Hero hero={site.hero} screenshots={site.screenshots} />
         <Concepts concepts={site.concepts} />
         <HowItWorks howItWorks={site.howItWorks} />
-        <Features features={site.features} books={site.books} />
+        <Features features={site.features} screenshots={site.screenshots} />
         <Download id={site.anchors.download} download={site.download} links={site.links} />
         <Docs id={site.anchors.docs} docs={site.docs} />
       </main>

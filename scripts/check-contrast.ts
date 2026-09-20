@@ -86,8 +86,6 @@ export function checkPairs(
 
 const SOURCE_FILE = /\.(tsx?|jsx?|css|html)$/
 const TEST_FILE = /\.(test|spec)\./
-// Book-cover colours are per-cover data, not theme tokens (see the comment in site.ts).
-const DATA_FILE = /[\\/]content[\\/]site\.ts$/
 
 /**
  * Finds every way a colour can reach the page other than the theme's allowed
@@ -117,10 +115,9 @@ export function findColourViolations(
     const file = join(entry.parentPath, entry.name)
     const original = readFileSync(file, 'utf8')
     // The @theme block is where hex values are supposed to live.
-    let scanned = file.endsWith('.css')
+    const scanned = file.endsWith('.css')
       ? stripComments(original).replace(THEME_BLOCK, blank)
       : original
-    if (DATA_FILE.test(file)) scanned = scanned.replace(hex, blank)
 
     const report = (index: number, message: string) => {
       const line = scanned.slice(0, index).split('\n').length

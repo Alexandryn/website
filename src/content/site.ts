@@ -55,7 +55,6 @@ export const site = {
     secondaryLabel: 'Read the docs',
     secondaryHref: `#${anchors.docs}`,
     footnote: 'macOS, Windows, and Linux · Open source · AGPL-3.0',
-    networkLabel: 'HOME NETWORK',
   },
 
   concepts: [
@@ -101,18 +100,10 @@ export const site = {
     library: {
       title: 'Library view',
       body: 'Your books in one place. Filter, sort, and search without a cloud.',
-      filterLabel: 'Filter',
-      sortLabel: 'Sort',
-      countLabel: '10 BOOKS',
     },
     devices: {
       title: 'Read on any device',
       body: 'Open Alexandryn on your laptop. Pick up where you left off on your phone or tablet, over your home network.',
-      desktopLabel: 'READING · DESKTOP',
-      phoneLabel: 'PHONE',
-      // The opening of Moby-Dick (public domain), split across the two devices.
-      desktopExcerpt: 'Call me Ishmael. Some years ago — never mind how long precisely —',
-      phoneExcerpt: 'having little or no money in my purse,',
     },
     privacy: {
       title: 'No cloud service',
@@ -193,20 +184,28 @@ export const site = {
     licenseLine: 'GNU Affero General Public License v3.0 or later',
   },
 
-  // Drawn covers for the device mockups. Public-domain titles only; the
-  // colours are per-cover data, not theme tokens.
-  books: [
-    { title: 'Middlemarch', bg: '#2a3550', fg: '#e8e4da' },
-    { title: 'Frankenstein', bg: '#26494f', fg: '#e6edea' },
-    { title: 'Moby-Dick', bg: '#333a63', fg: '#e4e3ee' },
-    { title: 'Pride and Prejudice', bg: '#9c5b3c', fg: '#f6ede4' },
-    { title: 'Walden', bg: '#3c5142', fg: '#e4ebe2' },
-    { title: 'Jane Eyre', bg: '#4a3450', fg: '#ede4f0' },
-    { title: 'Great Expectations', bg: '#2b4a5c', fg: '#e2ecf0' },
-    { title: 'Dracula', bg: '#7f6127', fg: '#f5eddc' },
-    { title: 'Wuthering Heights', bg: '#243b33', fg: '#e1eae4' },
-    { title: 'The Picture of Dorian Gray', bg: '#4e4030', fg: '#efe6d8' },
-  ],
+  // Captured by scripts/capture-screenshots.ts from a public-domain sample library.
+  // `src` is the path without an extension: each shot ships as .webp with a .png fallback.
+  screenshots: {
+    library: {
+      src: './screenshots/library-desktop',
+      width: 1280,
+      height: 800,
+      alt: 'The Alexandryn library view on a desktop: a grid of ten book covers, with search, filter, and sort controls.',
+    },
+    readerDesktop: {
+      src: './screenshots/reader-desktop',
+      width: 1280,
+      height: 800,
+      alt: 'The Alexandryn reader on a desktop, showing the opening of Moby-Dick with contents and text settings in the toolbar.',
+    },
+    readerPhone: {
+      src: './screenshots/reader-phone',
+      width: 390,
+      height: 844,
+      alt: 'The Alexandryn reader on a phone, showing the same opening of Moby-Dick.',
+    },
+  },
 } as const
 
 export type Site = typeof site

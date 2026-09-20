@@ -1,7 +1,13 @@
 import type { Site } from '../content/site.ts'
 import { DeviceMockup } from './DeviceMockup.tsx'
 
-export function Hero({ hero, books }: { hero: Site['hero']; books: Site['books'] }) {
+export function Hero({
+  hero,
+  screenshots,
+}: {
+  hero: Site['hero']
+  screenshots: Site['screenshots']
+}) {
   return (
     <section className="px-[clamp(20px,5vw,64px)] pt-[clamp(56px,9vw,104px)] pb-[clamp(48px,7vw,88px)]">
       <div className="mx-auto flex max-w-[1160px] flex-col items-center gap-[26px] text-center">
@@ -47,7 +53,7 @@ export function Hero({ hero, books }: { hero: Site['hero']; books: Site['books']
         </div>
         <p className="mt-0.5 font-mono text-xs tracking-[0.03em] text-ink-2">{hero.footnote}</p>
       </div>
-      <DeviceMockup books={books} networkLabel={hero.networkLabel} />
+      <DeviceMockup library={screenshots.library} phone={screenshots.readerPhone} />
     </section>
   )
 }
