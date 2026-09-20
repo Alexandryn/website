@@ -180,7 +180,7 @@ the ~5-file guideline in T1.
   - Files: `playwright.config.ts`, `e2e/a11y.spec.ts`, `e2e/keyboard.spec.ts`,
     `e2e/responsive.spec.ts`
 
-- [ ] **T13: Static checks — links and bundle size** (S)
+- [x] **T13: Static checks — links and bundle size** (S)
   - Acceptance: `check:links` fails on `href="#"`, empty, `example.com`, or
     missing `rel="noopener"` on `target=_blank`; `--strict` additionally
     requests every external URL (for launch; expected to fail until repos are
