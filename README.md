@@ -40,3 +40,16 @@ task list are in [`tasks/`](tasks/).
 ## Licence
 
 GNU Affero General Public License v3.0 or later. See [`LICENSE`](LICENSE).
+
+## Deploying
+
+`.github/workflows/pages.yml` verifies the site on every push and pull
+request, and deploys `dist/` to GitHub Pages when `main` changes. In the
+repository settings, set Pages to deploy from GitHub Actions once. Asset URLs
+are relative, so the same build works at a domain root and under a project
+path such as `https://<owner>.github.io/website/`.
+
+The workflow has not run yet: it was written while Actions was unavailable, so
+treat the first run as its test. After the first deploy, check the response
+headers with `curl -I`; GitHub Pages does not let a site set its own, so the
+page carries its Content-Security-Policy in a `<meta>` tag instead.
