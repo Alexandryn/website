@@ -1,0 +1,100 @@
+{
+  "_comment": "Public-domain titles only. Nothing here is a real person's library. Reader text is the opening of Moby-Dick (Herman Melville, 1851).",
+  "collection": {
+    "id": "01SAMPLECOLLECTION00000000",
+    "name": "Classics"
+  },
+  "readerBook": {
+    "workIndex": 2,
+    "title": "Moby-Dick",
+    "chapterTitle": "Loomings",
+    "paragraphs": [
+      "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world. It is a way I have of driving off the spleen and regulating the circulation.",
+      "Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people's hats off—then, I account it high time to get to sea as soon as I can. This is my substitute for pistol and ball.",
+      "Now, when I say that I am in the habit of going to sea whenever I begin to grow hazy about the eyes, and begin to be over conscious of my lungs, I do not mean to have it inferred that I ever go to sea as a passenger. For to go as a passenger you must needs have a purse, and a purse is but a rag unless you have something in it.",
+      "Besides, passengers get sea-sick—grow quarrelsome—don't sleep of nights—do not enjoy themselves much, as a general thing;—no, I never go as a passenger; nor, though I am something of a salt, do I ever go to sea as a Commodore, or a Captain, or a Cook."
+    ]
+  },
+  "works": [
+    {
+      "id": "01SAMPLE00WORK00000000000",
+      "editionId": "01SAMPLE00EDIT00000000000",
+      "title": "Middlemarch",
+      "subtitle": "A Study of Provincial Life",
+      "authors": ["George Eliot"],
+      "addedAt": "2026-08-10T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE01WORK00000000000",
+      "editionId": "01SAMPLE01EDIT00000000000",
+      "title": "Frankenstein",
+      "subtitle": "Or, The Modern Prometheus",
+      "authors": ["Mary Shelley"],
+      "addedAt": "2026-08-11T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE02WORK00000000000",
+      "editionId": "01SAMPLE02EDIT00000000000",
+      "title": "Moby-Dick",
+      "subtitle": "Or, The Whale",
+      "authors": ["Herman Melville"],
+      "addedAt": "2026-08-12T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE03WORK00000000000",
+      "editionId": "01SAMPLE03EDIT00000000000",
+      "title": "Pride and Prejudice",
+      "subtitle": "",
+      "authors": ["Jane Austen"],
+      "addedAt": "2026-08-13T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE04WORK00000000000",
+      "editionId": "01SAMPLE04EDIT00000000000",
+      "title": "Walden",
+      "subtitle": "Or, Life in the Woods",
+      "authors": ["Henry David Thoreau"],
+      "addedAt": "2026-08-14T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE05WORK00000000000",
+      "editionId": "01SAMPLE05EDIT00000000000",
+      "title": "Jane Eyre",
+      "subtitle": "An Autobiography",
+      "authors": ["Charlotte Brontë"],
+      "addedAt": "2026-08-15T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE06WORK00000000000",
+      "editionId": "01SAMPLE06EDIT00000000000",
+      "title": "Great Expectations",
+      "subtitle": "",
+      "authors": ["Charles Dickens"],
+      "addedAt": "2026-08-16T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE07WORK00000000000",
+      "editionId": "01SAMPLE07EDIT00000000000",
+      "title": "Dracula",
+      "subtitle": "",
+      "authors": ["Bram Stoker"],
+      "addedAt": "2026-08-17T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE08WORK00000000000",
+      "editionId": "01SAMPLE08EDIT00000000000",
+      "title": "Wuthering Heights",
+      "subtitle": "",
+      "authors": ["Emily Brontë"],
+      "addedAt": "2026-08-18T10:00:00Z"
+    },
+    {
+      "id": "01SAMPLE09WORK00000000000",
+      "editionId": "01SAMPLE09EDIT00000000000",
+      "title": "The Picture of Dorian Gray",
+      "subtitle": "",
+      "authors": ["Oscar Wilde"],
+      "addedAt": "2026-08-19T10:00:00Z"
+    }
+  ]
+}

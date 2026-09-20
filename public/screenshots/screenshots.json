@@ -1,0 +1,27 @@
+{
+  "appVersion": "1.0.0",
+  "capturedAt": "2026-09-20T22:59:46.243Z",
+  "files": [
+    {
+      "name": "library-desktop",
+      "width": 1280,
+      "height": 800,
+      "png": 102041,
+      "webp": 42054
+    },
+    {
+      "name": "reader-desktop",
+      "width": 1280,
+      "height": 800,
+      "png": 88043,
+      "webp": 60692
+    },
+    {
+      "name": "reader-phone",
+      "width": 390,
+      "height": 844,
+      "png": 83917,
+      "webp": 60104
+    }
+  ]
+}
