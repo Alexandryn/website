@@ -52,7 +52,11 @@ images. The script prints any API call it does not serve.
 
 ### What the sample contains
 
-`sample-library.json`: the ten public-domain titles drawn on the page, and the
+`sample-library.json`: the ten public-domain titles the library view shows, and the
 opening of _Moby-Dick_ (Herman Melville, 1851) for the reader view. A test
-(`sample-library.test.ts`) checks the titles match the page's drawn covers. No
+(`sample-library.test.ts`) holds the titles to a public-domain allowlist. No
 real person's library, paths, or data appear.
+
+The tests check the files and their sizes, not what the pixels show. After each
+capture, open all three images and look: only the ten titles above, only the
+Moby-Dick opening, nothing else on screen. That check is part of the task.
