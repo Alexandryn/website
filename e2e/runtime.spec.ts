@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { site } from '../src/content/site.ts'
 
 test('loads with no console errors, page errors, or CSP violations, and hydrates', async ({
   page,
@@ -23,18 +24,31 @@ test('requests nothing from any origin but its own', async ({ page, baseURL }) =
   expect([...origins]).toEqual([new URL(baseURL!).origin])
 })
 
-test('every image loads under the strict policy and is not broken', async ({ page }) => {
+test('every image loads under the strict policy, in WebP and in the PNG fallback', async ({
+  page,
+}) => {
   await page.goto('/')
-  await page.locator('img').last().scrollIntoViewIfNeeded()
-  await page.waitForLoadState('networkidle')
-  const images = await page.locator('img').evaluateAll((els) =>
-    els.map((el) => ({
-      src: (el as HTMLImageElement).currentSrc,
-      width: (el as HTMLImageElement).naturalWidth,
+  const sources = await page.locator('picture').evaluateAll((pictures) =>
+    pictures.map((picture) => ({
+      webp: picture.querySelector('source')!.getAttribute('srcset')!,
+      png: picture.querySelector('img')!.getAttribute('src')!,
     })),
   )
-  expect(images.length).toBe(5)
-  for (const image of images) expect(image.width, image.src).toBeGreaterThan(0)
+  expect(sources.length).toBe(Object.keys(site.screenshots).length + 2) // hero pair + feature reuse
+  for (const { webp, png } of sources) {
+    for (const path of [webp, png]) {
+      const response = await page.request.get(new URL(path, page.url()).href)
+      expect(response.status(), path).toBe(200)
+      expect(response.headers()['content-type'], path).toMatch(/^image\//)
+    }
+  }
+  // And the browser really decoded the ones it chose.
+  await page.locator('img').last().scrollIntoViewIfNeeded()
+  await page.waitForLoadState('networkidle')
+  const widths = await page
+    .locator('img')
+    .evaluateAll((els) => els.map((el) => (el as HTMLImageElement).naturalWidth))
+  for (const width of widths) expect(width).toBeGreaterThan(0)
 })
 
 test('has no inline style attributes, which the policy would block', async ({ page }) => {

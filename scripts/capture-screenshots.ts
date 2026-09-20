@@ -31,102 +31,114 @@ const CONTAINER = `<?xml version="1.0"?><container version="1.0" xmlns="urn:oasi
 const book = sample.readerBook
 const OPF = `<?xml version="1.0" encoding="UTF-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="id"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">urn:sample:${book.title}</dc:identifier><dc:title>${escapeXml(book.title)}</dc:title><dc:language>en</dc:language></metadata><manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/><item id="c1" href="chapter1.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="c1"/></spine></package>`
 const NAV = `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"><body><nav epub:type="toc"><ol><li><a href="chapter1.xhtml">${escapeXml(book.chapterTitle)}</a></li></ol></nav></body></html>`
-const CHAPTER = `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml"><body><h1>${escapeXml(book.chapterTitle)}</h1>${book.paragraphs.map((p) => `<p>${escapeXml(p)}</p>`).join('')}</body></html>`
+const CHAPTER = `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>${escapeXml(book.chapterTitle)}</title></head><body><h1>${escapeXml(book.chapterTitle)}</h1>${book.paragraphs.map((p) => `<p>${escapeXml(p)}</p>`).join('')}</body></html>`
 
 const unhandled = new Set<string>()
 
 /** Serves the whole API from the sample library. The app's own mock worker is blocked. */
 async function mockApi(context: BrowserContext): Promise<void> {
-  await context.route('**/api/**', async (route) => {
-    const url = new URL(route.request().url())
-    const path = url.pathname
-    const method = route.request().method()
-    const now = new Date().toISOString()
+  // A predicate, not a glob: `**/api/**` would also catch a source module such as /src/api/x.ts.
+  await context.route(
+    (url) => url.pathname.startsWith('/api/'),
+    async (route) => {
+      const url = new URL(route.request().url())
+      const path = url.pathname
+      const method = route.request().method()
+      const now = new Date().toISOString()
 
-    if (path === '/api/bootstrap') {
-      return json(route, {
-        capabilities: { sources: true, import: true, settings: true, system: true, network: true },
-      })
-    }
-    if (path === '/api/v1/library') {
-      return json(route, {
-        works: sample.works.map((w) => ({
+      if (path === '/api/bootstrap') {
+        return json(route, {
+          capabilities: {
+            sources: true,
+            import: true,
+            settings: true,
+            system: true,
+            network: true,
+          },
+        })
+      }
+      if (path === '/api/v1/library') {
+        return json(route, {
+          works: sample.works.map((w) => ({
+            id: w.id,
+            title: w.title,
+            subtitle: w.subtitle,
+            authors: w.authors,
+            isOwned: true,
+            collections: [{ ...sample.collection, addedAt: w.addedAt }],
+            addedAt: w.addedAt,
+          })),
+          nextCursor: null,
+        })
+      }
+      const work = /^\/api\/v1\/works\/([^/]+)$/.exec(path)
+      if (work) {
+        const w = sample.works.find((x) => x.id === work[1])
+        if (!w) return json(route, { code: 'not_found', message: 'no work with that id' }, 404)
+        return json(route, {
           id: w.id,
           title: w.title,
           subtitle: w.subtitle,
           authors: w.authors,
-          isOwned: true,
+          subjects: ['Fiction'],
+          originalLanguage: 'en',
+          ownedEditions: [
+            { id: w.editionId, language: 'en', addedAt: w.addedAt, formats: ['epub'] },
+          ],
           collections: [{ ...sample.collection, addedAt: w.addedAt }],
-          addedAt: w.addedAt,
-        })),
-        nextCursor: null,
-      })
-    }
-    const work = /^\/api\/v1\/works\/([^/]+)$/.exec(path)
-    if (work) {
-      const w = sample.works.find((x) => x.id === work[1])
-      if (!w) return json(route, { code: 'not_found', message: 'no work with that id' }, 404)
-      return json(route, {
-        id: w.id,
-        title: w.title,
-        subtitle: w.subtitle,
-        authors: w.authors,
-        subjects: ['Fiction'],
-        originalLanguage: 'en',
-        ownedEditions: [{ id: w.editionId, language: 'en', addedAt: w.addedAt, formats: ['epub'] }],
-        collections: [{ ...sample.collection, addedAt: w.addedAt }],
-      })
-    }
-    if (path === '/api/v1/collections') {
-      return json(route, {
-        collections: [{ ...sample.collection, workCount: sample.works.length }],
-      })
-    }
-    if (path.includes('/reader/content/')) {
-      const file = decodeURIComponent(path.split('/reader/content/')[1] ?? '')
-      const bodies: Record<string, string> = {
-        'META-INF/container.xml': CONTAINER,
-        'OEBPS/content.opf': OPF,
-        'OEBPS/nav.xhtml': NAV,
-        'OEBPS/chapter1.xhtml': CHAPTER,
+        })
       }
-      const body = bodies[file]
-      if (body === undefined) return json(route, { code: 'not_found' }, 404)
-      return route.fulfill({ status: 200, contentType: 'application/xhtml+xml', body })
-    }
-    if (path.endsWith('/progress')) return json(route, { progress: null })
-    if (path === '/api/v1/reading/preferences') {
-      return json(route, {
-        preferences: {
-          font: 'serif',
-          fontSize: 19,
-          lineSpacing: 1.5,
-          theme: 'light',
-          layoutMode: 'paginated',
-          columnWidth: 'default',
-        },
-      })
-    }
-    if (path.endsWith('/bookmarks')) return json(route, { bookmarks: [] })
-    if (path.endsWith('/highlights')) return json(route, { highlights: [] })
-    if (path === '/api/v1/auth/setup/status') return json(route, { isSetup: true })
-    if (path === '/api/v1/libraries') {
-      return json(route, {
-        libraries: [
-          {
-            id: '00000000-0000-0000-0000-000000000001',
-            name: 'Sample library',
-            description: '',
-            allowReaderUploads: false,
-            createdAt: now,
-            updatedAt: now,
+      if (path === '/api/v1/collections') {
+        return json(route, {
+          collections: [{ ...sample.collection, workCount: sample.works.length }],
+        })
+      }
+      if (path.includes('/reader/content/')) {
+        const file = decodeURIComponent(path.split('/reader/content/')[1] ?? '')
+        const bodies: Record<string, string> = {
+          'META-INF/container.xml': CONTAINER,
+          'OEBPS/content.opf': OPF,
+          'OEBPS/nav.xhtml': NAV,
+          'OEBPS/chapter1.xhtml': CHAPTER,
+        }
+        const body = bodies[file]
+        if (body === undefined) return json(route, { code: 'not_found' }, 404)
+        return route.fulfill({ status: 200, contentType: 'application/xhtml+xml', body })
+      }
+      if (path.endsWith('/progress')) return json(route, { progress: null })
+      if (path === '/api/v1/reading/preferences') {
+        return json(route, {
+          preferences: {
+            font: 'serif',
+            fontSize: 19,
+            lineSpacing: 1.5,
+            theme: 'light',
+            layoutMode: 'paginated',
+            columnWidth: 'default',
           },
-        ],
-      })
-    }
-    unhandled.add(`${method} ${path}`)
-    return json(route, { code: 'not_found', message: 'not part of the sample library' }, 404)
-  })
+        })
+      }
+      if (path.endsWith('/bookmarks')) return json(route, { bookmarks: [] })
+      if (path.endsWith('/highlights')) return json(route, { highlights: [] })
+      if (path === '/api/v1/auth/setup/status') return json(route, { isSetup: true })
+      if (path === '/api/v1/libraries') {
+        return json(route, {
+          libraries: [
+            {
+              id: '00000000-0000-0000-0000-000000000001',
+              name: 'Sample library',
+              description: '',
+              allowReaderUploads: false,
+              createdAt: now,
+              updatedAt: now,
+            },
+          ],
+        })
+      }
+      unhandled.add(`${method} ${path}`)
+      return json(route, { code: 'not_found', message: 'not part of the sample library' }, 404)
+    },
+  )
 }
 
 const WEBP_QUALITY = 0.86

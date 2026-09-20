@@ -1,6 +1,6 @@
 {
   "appVersion": "1.0.0",
-  "capturedAt": "2026-09-20T22:59:46.243Z",
+  "capturedAt": "2026-09-20T23:08:16.036Z",
   "files": [
     {
       "name": "library-desktop",
@@ -13,15 +13,15 @@
       "name": "reader-desktop",
       "width": 1280,
       "height": 800,
-      "png": 88043,
-      "webp": 60692
+      "png": 132715,
+      "webp": 78612
     },
     {
       "name": "reader-phone",
       "width": 390,
       "height": 844,
-      "png": 83917,
-      "webp": 60104
+      "png": 85089,
+      "webp": 48102
     }
   ]
 }

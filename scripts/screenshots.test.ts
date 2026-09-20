@@ -14,6 +14,22 @@ function pngSize(path: string): { width: number; height: number } {
   return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) }
 }
 
+/** Width and height from a WebP file, for the lossy (VP8), lossless (VP8L) and extended (VP8X) forms. */
+function webpSize(bytes: Buffer): { width: number; height: number } {
+  const kind = bytes.subarray(12, 16).toString('latin1')
+  if (kind === 'VP8 ') {
+    return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff }
+  }
+  if (kind === 'VP8L') {
+    const bits = bytes.readUInt32LE(21)
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 }
+  }
+  if (kind === 'VP8X') {
+    return { width: bytes.readUIntLE(24, 3) + 1, height: bytes.readUIntLE(27, 3) + 1 }
+  }
+  throw new Error(`unrecognised WebP chunk ${kind}`)
+}
+
 describe.each(Object.entries(site.screenshots))('screenshot %s', (_name, shot) => {
   it('exists as both a WebP and a PNG', () => {
     expect(existsSync(fileFor(shot.src, 'webp'))).toBe(true)
@@ -24,10 +40,11 @@ describe.each(Object.entries(site.screenshots))('screenshot %s', (_name, shot) =
     expect(pngSize(fileFor(shot.src, 'png'))).toEqual({ width: shot.width, height: shot.height })
   })
 
-  it('is a real WebP file', () => {
+  it('is a real WebP file with the same dimensions as the PNG fallback', () => {
     const bytes = readFileSync(fileFor(shot.src, 'webp'))
     expect(bytes.subarray(0, 4).toString('latin1')).toBe('RIFF')
     expect(bytes.subarray(8, 12).toString('latin1')).toBe('WEBP')
+    expect(webpSize(bytes)).toEqual({ width: shot.width, height: shot.height })
   })
 
   it('stays small enough not to slow the page', () => {
