@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | `APPROVED` — maintainer approved 2026-09-18 (copy corrections, screenshots, hosting, Docker mention) |
+| **Status** | `IMPLEMENTED` — built and reviewed 2026-09-20; not yet `VERIFIED`: the Pages workflow has never run and WebKit is untested. Approved 2026-09-18 (copy corrections, screenshots, hosting, Docker mention) |
 | **Repo** | `website` (separate from `alexandryn`, per ADR 0006) |
 | **Design source** | Claude Design project "Alexandryn interactive prototype" (`78075626-e444-438f-8437-205d57129a37`), file `Alexandryn Landing.dc.html`, read 2026-09-18 |
 
