@@ -16,7 +16,12 @@ export function gzippedScriptBytes(dir: string): number {
 function main(argv: string[]): number {
   const value = (flag: string) => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined)
   const dir = resolve(value('--dir') ?? join(import.meta.dirname, '../dist'))
-  const limitKib = Number(value('--limit-kib') ?? DEFAULT_LIMIT_KIB)
+  const given = value('--limit-kib')
+  if (argv.includes('--limit-kib') && (given === undefined || given.startsWith('--'))) {
+    console.error('check-bundle-size: --limit-kib needs a value')
+    return 1
+  }
+  const limitKib = Number(given ?? DEFAULT_LIMIT_KIB)
   if (!Number.isFinite(limitKib) || limitKib <= 0) {
     console.error('check-bundle-size: --limit-kib must be a positive number')
     return 1

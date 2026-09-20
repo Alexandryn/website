@@ -12,7 +12,8 @@ export default defineConfig({
   webServer: {
     command: `npm run build && npx vite preview --port ${port} --strictPort`,
     url: `http://localhost:${port}`,
-    reuseExistingServer: !process.env.CI,
+    // Always start our own server: a stale preview on this port would serve an old build.
+    reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [

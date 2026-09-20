@@ -6,7 +6,12 @@ import type { AddressInfo } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { externalUrls, findLinkProblems, checkReachable } from './check-links.ts'
+import {
+  checkReachable,
+  externalUrls,
+  findLinkProblems,
+  findThirdPartyResources,
+} from './check-links.ts'
 
 const page = (body: string) => `<html><body>${body}</body></html>`
 
@@ -48,12 +53,79 @@ describe('findLinkProblems', () => {
     expect(externalUrls(html)).toEqual(['https://a.test/?a=1&b=2'])
   })
 
+  it.each([
+    ['an upper-case tag and attribute', '<A HREF="https://example.com/">x</A>', /example\.com/],
+    [
+      'single-quoted attributes',
+      `<a href='https://a.test/' target='_blank' rel='nofollow'>x</a>`,
+      /noopener/,
+    ],
+    ['an upper-case _BLANK', '<a href="https://a.test/" target="_BLANK">x</a>', /noopener/],
+    [
+      'a ">" inside an earlier attribute',
+      '<a title="a>b" href="https://a.test/" target="_blank">x</a>',
+      /noopener/,
+    ],
+    ['a trailing-dot placeholder host', '<a href="https://example.com./">x</a>', /example\.com/],
+    ['an unquoted href', '<a href=https://example.com/x>x</a>', /example\.com/],
+  ])('still catches %s', (_label, body, expected) => {
+    expect(findLinkProblems(page(body)).join('\n')).toMatch(expected)
+  })
+
+  it('accepts a single-quoted new tab that has noopener', () => {
+    expect(
+      findLinkProblems(page(`<a href='https://a.test/' target='_blank' rel='noopener'>x</a>`)),
+    ).toEqual([])
+  })
+
   it('does not mistake <abbr> or <article> for links', () => {
     expect(findLinkProblems(page('<abbr>x</abbr><article></article>'))).toEqual([])
   })
 
   it('finds nothing to check in a page with no links, which the CLI treats as an error', () => {
     expect(externalUrls(page('<p>hi</p>'))).toEqual([])
+  })
+})
+
+describe('findThirdPartyResources', () => {
+  it('accepts same-origin and relative resources', () => {
+    const html =
+      '<link rel="stylesheet" href="./assets/a.css"><script type="module" src="./assets/a.js"></script>'
+    expect(findThirdPartyResources(html)).toEqual([])
+  })
+
+  it.each([
+    [
+      'a stylesheet',
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist">',
+    ],
+    ['a script', '<script src="https://cdn.test/x.js"></script>'],
+    ['a protocol-relative script', '<script src="//cdn.test/x.js"></script>'],
+    ['an image', '<img src="https://img.test/a.png" alt="">'],
+    ['an iframe', '<iframe src="https://embed.test/"></iframe>'],
+    ['a preconnect hint', '<link rel="preconnect" href="https://fonts.gstatic.com">'],
+    ['a form action', '<form action="https://collect.test/"></form>'],
+    ['a single-quoted script', `<script src='https://cdn.test/x.js'></script>`],
+    ['an inline style url', '<div style="background:url(https://img.test/a.png)"></div>'],
+  ])('reports %s', (_label, html) => {
+    expect(findThirdPartyResources(html)).not.toEqual([])
+  })
+
+  it('reports an absolute url in a stylesheet', () => {
+    expect(findThirdPartyResources('@import url(https://x.test/a.css);', 'css')).not.toEqual([])
+    expect(findThirdPartyResources('a{background:url("//x.test/a.png")}', 'css')).not.toEqual([])
+    expect(findThirdPartyResources('a{src:url(./f.woff2)}', 'css')).toEqual([])
+    // The SVG namespace in a data: URI is not a request.
+    expect(
+      findThirdPartyResources(
+        'a{background:url("data:image/svg+xml;xmlns=http://www.w3.org")}',
+        'css',
+      ),
+    ).toEqual([])
+  })
+
+  it('does not count links, which only navigate when clicked', () => {
+    expect(findThirdPartyResources('<a href="https://github.com/x">x</a>')).toEqual([])
   })
 })
 
@@ -115,6 +187,12 @@ describe('the CLI', () => {
     dirs.push(dir)
     mkdirSync(join(dir, 'dist'))
     if (html !== null) writeFileSync(join(dir, 'dist/index.html'), html)
+    const cssAt = args.indexOf('--css')
+    if (cssAt >= 0) {
+      mkdirSync(join(dir, 'dist/assets'))
+      writeFileSync(join(dir, 'dist/assets/a.css'), args[cssAt + 1]!)
+      args = args.filter((_, i) => i !== cssAt && i !== cssAt + 1)
+    }
     return spawnSync(
       process.execPath,
       [join(import.meta.dirname, 'check-links.ts'), '--dir', join(dir, 'dist'), ...args],
@@ -132,6 +210,16 @@ describe('the CLI', () => {
     const r = run(page('<a href="#">x</a>'))
     expect(r.status).toBe(1)
     expect(r.stderr).toMatch(/bare #/)
+  })
+
+  it('exits 1 when the build pulls in a third-party stylesheet or a css @import', () => {
+    const link = '<a href="#a">x</a><i id="a"></i>'
+    expect(
+      run(page(`${link}<link rel="stylesheet" href="https://fonts.googleapis.com/x">`)).status,
+    ).toBe(1)
+    const r = run(page(link), '--css', '@import url(https://x.test/a.css);')
+    expect(r.status).toBe(1)
+    expect(r.stderr).toMatch(/x\.test/)
   })
 
   it('exits 1 when the page is missing or has no links, so an empty build cannot pass', () => {

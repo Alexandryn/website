@@ -26,6 +26,11 @@ export const site = {
   version,
   anchors,
 
+  meta: {
+    description:
+      'Alexandryn is a self-hosted digital library. Run it on your desktop or a home server, and read your books from any device on your home network.',
+  },
+
   links,
 
   nav: {

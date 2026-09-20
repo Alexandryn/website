@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { site } from '../src/content/site.ts'
-import { inject, problemsWith } from './prerender.ts'
+import { headTags, inject, problemsWith } from './prerender.ts'
 
 const shell = '<!doctype html><html><body><div id="root"></div><script></script></body></html>'
 
@@ -23,6 +23,30 @@ describe('inject', () => {
   })
 })
 
+describe('headTags', () => {
+  const head = '<html><head><meta charset="UTF-8" /><title>T</title></head><body></body></html>'
+
+  it('adds a strict Content-Security-Policy right after the charset, and a description', () => {
+    const out = headTags(head, 'About "it" & more')
+    expect(out.indexOf('Content-Security-Policy')).toBeGreaterThan(out.indexOf('charset'))
+    expect(out.indexOf('Content-Security-Policy')).toBeLessThan(out.indexOf('<title>'))
+    expect(out).toMatch(/default-src 'none'/)
+    expect(out).toMatch(/script-src 'self'/)
+    expect(out).toMatch(/connect-src 'none'/)
+    expect(out).toMatch(/style-src-attr 'unsafe-inline'/)
+    expect(out).not.toMatch(/script-src[^;"]*unsafe/)
+  })
+
+  it('escapes the description so it cannot break out of the attribute', () => {
+    const out = headTags(head, 'a "quoted" <b> & c')
+    expect(out).toContain('content="a &quot;quoted&quot; &lt;b&gt; &amp; c"')
+  })
+
+  it('throws when the charset tag it anchors on is missing', () => {
+    expect(() => headTags('<html><head></head></html>', 'x')).toThrow(/charset/)
+  })
+})
+
 describe('problemsWith (what the built page must contain without JavaScript)', () => {
   const good = [
     '<h1>A</h1>',
@@ -41,6 +65,23 @@ describe('problemsWith (what the built page must contain without JavaScript)', (
 
   it('accepts a page with the h1, the section headings, and every link', () => {
     expect(problemsWith(good)).toEqual([])
+  })
+
+  it('does not accept a heading that only appears as link text', () => {
+    // "Documentation" is also the nav and footer link text.
+    const onlyLink = good.replace(
+      `<h2>${site.docs.heading}</h2>`,
+      `<a href="#docs">${site.docs.heading}</a>`,
+    )
+    expect(problemsWith(onlyLink).join()).toMatch(/heading "Documentation"/)
+  })
+
+  it('rejects root-absolute asset paths, which break on a GitHub Pages project site', () => {
+    expect(problemsWith(good + '<script src="/assets/a.js"></script>').join()).toMatch(/relative/)
+    expect(problemsWith(good + '<link href="/assets/a.css" rel="stylesheet">').join()).toMatch(
+      /relative/,
+    )
+    expect(problemsWith(good + '<script src="./assets/a.js"></script>')).toEqual([])
   })
 
   it('reports an empty page, a missing h1, a missing heading, and a missing link', () => {

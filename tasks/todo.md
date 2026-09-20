@@ -192,9 +192,9 @@ the ~5-file guideline in T1.
     `scripts/check-bundle-size.ts`, `scripts/check-bundle-size.test.ts`, `package.json`
 
 ### Checkpoint C — page is verified
-- [ ] Every command in the spec's Commands section passes
-- [ ] Success criteria 1–6 and 8 met (8: ≤ 90 KiB JS, content in built HTML)
-- [ ] `/agent-skills:review` including a security pass (no third-party origin
+- [x] Every command in the spec's Commands section passes
+- [x] Success criteria 1–6 and 8 met (8: ≤ 90 KiB JS, content in built HTML)
+- [x] `/agent-skills:review` including a security pass (no third-party origin
       at runtime, no secrets, `rel` attributes)
 
 ## Phase 5 — Screenshots and release wiring
