@@ -151,7 +151,7 @@ the ~5-file guideline in T1.
 
 ## Phase 4 — Verification
 
-- [ ] **T12a: Prerender the page at build time** (S)
+- [x] **T12a: Prerender the page at build time** (S)
   - Acceptance: after `vite build`, a script renders `<App/>` with
     `react-dom/server` and writes the HTML into `dist/index.html`; the client
     entry uses `hydrateRoot`; nothing in the component tree touches `window`
