@@ -239,7 +239,7 @@ the ~5-file guideline in T1.
   - Depends on: T1
   - Files: `.github/workflows/pages.yml`, `vite.config.ts`
 
-- [ ] **T17: Final battery, review, ship** (S)
+- [x] **T17: Final battery, review, ship** (S)
   - Acceptance: every command in the spec passes on the exact commit;
     `/agent-skills:review` and `/agent-skills:ship` run; SPEC.md status set to
     `IMPLEMENTED`; README lists the launch checklist (make repos public,
@@ -247,6 +247,11 @@ the ~5-file guideline in T1.
     enable Pages).
   - Verify: the full command list; `npm run check:links --strict` result
     recorded honestly
+  - Result: the command list passes locally (Chromium and Firefox only).
+    `check:links --strict` returns 404 for every external URL, as expected
+    while the repositories are private. Review ran twice by two fresh reviewers
+    at Checkpoint C and once on the screenshots and workflow; `/ship` was not
+    run because nothing is deployable until the launch checklist is done.
   - Depends on: T15, T16
   - Files: `SPEC.md`, `README.md`
 

@@ -53,3 +53,20 @@ The workflow has not run yet: it was written while Actions was unavailable, so
 treat the first run as its test. After the first deploy, check the response
 headers with `curl -I`; GitHub Pages does not let a site set its own, so the
 page carries its Content-Security-Policy in a `<meta>` tag instead.
+
+## Launch checklist
+
+Nothing here goes public until Alexandryn v1.0.0 is tagged and its installers
+exist, because the download buttons point at `releases/latest`.
+
+1. Push this repository and the `docs` repository to GitHub under the
+   `Alexandryn` organisation, and make both public with `alexandryn`.
+2. Run `npm run check:links -- --strict`. It requests every external URL and
+   fails until those repositories are public and the release exists; that
+   failure is expected before launch.
+3. Re-run `scripts/capture-screenshots.ts` against the tagged version, look at
+   all three images, and commit them. `public/screenshots/screenshots.json`
+   records which version they came from.
+4. In the repository settings, set Pages to deploy from GitHub Actions, then
+   watch the first workflow run and check the headers with `curl -I`.
+5. Open the site in Safari: WebKit could not be tested during development.
