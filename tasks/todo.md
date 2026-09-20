@@ -214,7 +214,7 @@ the ~5-file guideline in T1.
   - Files: `scripts/capture-screenshots.ts`, `scripts/sample-library.json`,
     `scripts/README.md`, `public/screenshots/*`
 
-- [ ] **T15: Screenshots in the device frames** (M)
+- [x] **T15: Screenshots in the device frames** (M)
   - Acceptance: hero laptop and phone frames and the two feature visuals show
     the real screenshots; each `<img>` has meaningful `alt`, explicit
     `width`/`height`, `decoding="async"`, and `loading="lazy"` below the

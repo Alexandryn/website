@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { site } from '../content/site.ts'
 import { Hero } from './Hero.tsx'
 
-const renderHero = () => render(<Hero hero={site.hero} books={site.books} />)
+const renderHero = () => render(<Hero hero={site.hero} screenshots={site.screenshots} />)
 const { headlineLead, headlineEmphasis, headlineEnd } = site.hero
 
 describe('Hero', () => {
@@ -36,25 +36,11 @@ describe('Hero', () => {
     expect(screen.getByText(site.hero.footnote)).toBeInTheDocument()
   })
 
-  it('draws 8 covers on the laptop and 4 on the phone', () => {
+  it('shows the real library and phone screenshots in the device frames', () => {
     const { container } = renderHero()
     const mockup = container.querySelector('[data-device-mockup]')!
-    expect(mockup.querySelectorAll('[data-cover]')).toHaveLength(12)
-    const laptop = mockup.querySelector('[data-device="laptop"]')!
-    const phone = mockup.querySelector('[data-device="phone"]')!
-    expect(laptop.querySelectorAll('[data-cover]')).toHaveLength(8)
-    expect(phone.querySelectorAll('[data-cover]')).toHaveLength(4)
-  })
-
-  it('hides the whole decorative mockup from assistive technology', () => {
-    const { container } = renderHero()
-    expect(container.querySelector('[data-device-mockup]')).toHaveAttribute('aria-hidden', 'true')
-    // The drawn covers carry no information the text does not; none may be reachable.
-    expect(within(container).queryByRole('img')).toBeNull()
-  })
-
-  it('labels the phone mockup with the home-network label', () => {
-    renderHero()
-    expect(screen.getByText(site.hero.networkLabel)).toBeInTheDocument()
+    expect(within(mockup as HTMLElement).getAllByRole('img')).toHaveLength(2)
+    expect(screen.getByRole('img', { name: site.screenshots.library.alt })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: site.screenshots.readerPhone.alt })).toBeInTheDocument()
   })
 })

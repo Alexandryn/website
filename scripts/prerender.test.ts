@@ -33,7 +33,8 @@ describe('headTags', () => {
     expect(out).toMatch(/default-src 'none'/)
     expect(out).toMatch(/script-src 'self'/)
     expect(out).toMatch(/connect-src 'none'/)
-    expect(out).toMatch(/style-src-attr 'unsafe-inline'/)
+    // No inline styles remain, so none are allowed.
+    expect(out).not.toMatch(/unsafe-inline/)
     expect(out).not.toMatch(/script-src[^;"]*unsafe/)
   })
 

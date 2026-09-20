@@ -7,10 +7,10 @@ import { TerminalPanel } from './TerminalPanel.tsx'
 
 export function Features({
   features,
-  books,
+  screenshots,
 }: {
   features: Site['features']
-  books: Site['books']
+  screenshots: Site['screenshots']
 }) {
   return (
     <section className="px-[clamp(20px,5vw,64px)] pt-[clamp(40px,6vw,64px)] pb-[clamp(56px,8vw,88px)]">
@@ -18,12 +18,16 @@ export function Features({
         <FeatureRow
           title={features.library.title}
           body={features.library.body}
-          visual={<LibraryVisual library={features.library} books={books} />}
+          visual={<LibraryVisual shot={screenshots.library} />}
+          decorative={false}
         />
         <FeatureRow
           title={features.devices.title}
           body={features.devices.body}
-          visual={<ReadingVisual devices={features.devices} />}
+          visual={
+            <ReadingVisual desktop={screenshots.readerDesktop} phone={screenshots.readerPhone} />
+          }
+          decorative={false}
           visualFirst
         />
         <FeatureRow

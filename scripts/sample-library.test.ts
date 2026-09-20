@@ -2,7 +2,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { site } from '../src/content/site.ts'
 
 interface Sample {
   readerBook: { workIndex: number; title: string; paragraphs: string[] }
@@ -13,25 +12,33 @@ const sample = JSON.parse(
 ) as Sample
 
 describe('the screenshot sample library', () => {
-  it('holds exactly the public-domain titles the page draws, so the two agree', () => {
-    expect(sample.works.map((w) => w.title).sort()).toEqual(site.books.map((b) => b.title).sort())
+  it('holds only public-domain titles', () => {
+    // An allowlist, not a snapshot: adding a title means checking it is public domain.
+    const publicDomain = new Set([
+      'Middlemarch',
+      'Frankenstein',
+      'Moby-Dick',
+      'Pride and Prejudice',
+      'Walden',
+      'Jane Eyre',
+      'Great Expectations',
+      'Dracula',
+      'Wuthering Heights',
+      'The Picture of Dorian Gray',
+    ])
+    expect(sample.works).toHaveLength(publicDomain.size)
+    for (const { title } of sample.works) expect(publicDomain, title).toContain(title)
   })
 
-  it('has unique ids, an author for every work, and the count the library view shows', () => {
+  it('has unique ids and an author for every work', () => {
     expect(new Set(sample.works.map((w) => w.id)).size).toBe(sample.works.length)
     expect(new Set(sample.works.map((w) => w.editionId)).size).toBe(sample.works.length)
     for (const work of sample.works) expect(work.authors.length, work.title).toBeGreaterThan(0)
-    expect(site.features.library.countLabel).toBe(`${sample.works.length} BOOKS`)
   })
 
   it('reads from a work that exists, and its text is the Moby-Dick opening', () => {
     const work = sample.works[sample.readerBook.workIndex]
     expect(work?.title).toBe(sample.readerBook.title)
     expect(sample.readerBook.paragraphs[0]).toMatch(/^Call me Ishmael\./)
-  })
-
-  it('shows the same opening lines as the page mockup', () => {
-    const text = sample.readerBook.paragraphs.join(' ')
-    expect(text).toContain('having little or no money in my purse,')
   })
 })

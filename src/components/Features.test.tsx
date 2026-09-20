@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { site } from '../content/site.ts'
 import { Features } from './Features.tsx'
 
-const renderFeatures = () => render(<Features features={site.features} books={site.books} />)
+const renderFeatures = () =>
+  render(<Features features={site.features} screenshots={site.screenshots} />)
 
 describe('Features: library view and read-on-any-device', () => {
   it('shows each row as an h2 title with its body text', () => {
@@ -14,42 +15,29 @@ describe('Features: library view and read-on-any-device', () => {
     }
   })
 
-  it('hides the decorative illustrations from assistive technology', () => {
+  it('hides only the drawn privacy graphic from assistive technology', () => {
     const { container } = renderFeatures()
-    for (const name of ['library', 'devices', 'privacy']) {
-      const visual = container.querySelector(`[data-visual="${name}"]`)!
-      expect(visual.closest('[data-feature-visual]'), name).toHaveAttribute('aria-hidden', 'true')
-    }
+    const hidden = [...container.querySelectorAll('[data-feature-visual]')].filter(
+      (el) => el.getAttribute('aria-hidden') === 'true',
+    )
+    expect(hidden).toHaveLength(1)
+    expect(hidden[0]!.querySelector('[data-visual="privacy"]')).not.toBeNull()
   })
 
-  it('draws the library panel with filter and sort chips, a count, and all ten covers', () => {
+  it('shows the library screenshot with its alt text, lazily loaded below the fold', () => {
     const { container } = renderFeatures()
     const panel = container.querySelector<HTMLElement>('[data-visual="library"]')!
-    expect(within(panel).getByText(site.features.library.filterLabel)).toBeInTheDocument()
-    expect(within(panel).getByText(site.features.library.sortLabel)).toBeInTheDocument()
-    expect(within(panel).getByText(site.features.library.countLabel)).toBeInTheDocument()
-    expect(panel.querySelectorAll('[data-cover]')).toHaveLength(site.books.length)
+    const img = within(panel).getByRole('img', { name: site.screenshots.library.alt })
+    expect(img).toHaveAttribute('loading', 'lazy')
   })
 
-  it('says how many books it draws, rather than an invented library size', () => {
-    expect(site.features.library.countLabel).toBe(`${site.books.length} BOOKS`)
-  })
-
-  it('draws the desktop and phone reading panels from the same passage', () => {
+  it('shows the reader on a desktop and on a phone, both with alt text and lazily loaded', () => {
     const { container } = renderFeatures()
     const panel = container.querySelector<HTMLElement>('[data-visual="devices"]')!
-    const { desktopLabel, phoneLabel, desktopExcerpt, phoneExcerpt } = site.features.devices
-    for (const text of [desktopLabel, phoneLabel, desktopExcerpt, phoneExcerpt]) {
-      expect(within(panel).getByText(text)).toBeInTheDocument()
+    for (const shot of [site.screenshots.readerDesktop, site.screenshots.readerPhone]) {
+      const img = within(panel).getByRole('img', { name: shot.alt })
+      expect(img).toHaveAttribute('loading', 'lazy')
     }
-  })
-
-  it('quotes only the opening of Moby-Dick, which is public domain', () => {
-    const { desktopExcerpt, phoneExcerpt } = site.features.devices
-    expect(desktopExcerpt).toMatch(/^Call me Ishmael\./)
-    expect(`${desktopExcerpt} ${phoneExcerpt}`).toMatch(
-      /never mind how long precisely.*having little or no money/,
-    )
   })
 
   it('puts the illustration first in the second row only, as in the prototype', () => {
