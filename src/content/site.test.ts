@@ -112,8 +112,8 @@ describe('the audit catches what it is for (positive controls)', () => {
     [
       'a hard-coded wrong version',
       'howItWorks.steps[0].body',
-      'Install 1.0.1 today.',
-      /version 1\.0\.1/,
+      'Install 1.0.2 today.',
+      /version 1\.0\.2/,
     ],
     ['an exclamation mark', 'download.heading', 'Ready to run your own library!', /exclamation/],
   ])('rejects %s', (_label, path, value, expected) => {
@@ -164,6 +164,11 @@ describe('load-bearing statements are present in full', () => {
     expect(site.features.openSource.body).toMatch(/does not keep its own copy/)
   })
 
+  it('says the macOS installer is for Apple silicon only, since the release has no Intel build', () => {
+    expect(site.download.platformNote).toMatch(/Apple silicon/)
+    expect(site.download.platformNote).toMatch(/no Intel/i)
+  })
+
   it('says the installers are not yet code-signed and the OS will warn', () => {
     expect(site.download.signingNote).toMatch(
       /^The installers are not yet code-signed, so macOS and Windows will warn you/,
@@ -179,8 +184,8 @@ describe('load-bearing statements are present in full', () => {
 })
 
 describe('version', () => {
-  it('is 1.0.0 and the visible label derives from it', () => {
-    expect(site.version).toBe('1.0.0')
+  it('is 1.0.1 and the visible label derives from it', () => {
+    expect(site.version).toBe('1.0.1')
     expect(site.download.versionLabel).toBe(`v${site.version}`)
   })
 })

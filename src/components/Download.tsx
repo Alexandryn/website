@@ -38,6 +38,7 @@ export function Download({
             {download.changelogLabel}
           </a>
         </p>
+        <p className="mt-3.5 text-sm text-ink-2">{download.platformNote}</p>
         <p className="mt-3.5 text-sm text-ink-2">{download.signingNote}</p>
         <p className="mt-3.5 text-sm text-ink-2">
           {download.dockerLead}
