@@ -11,6 +11,17 @@ export function Hero({
   return (
     <section className="px-[clamp(20px,5vw,64px)] pt-[clamp(56px,9vw,104px)] pb-[clamp(48px,7vw,88px)]">
       <div className="mx-auto flex max-w-[1160px] flex-col items-center gap-[26px] text-center">
+        <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 shadow-sm">
+          <img
+            src="alex.svg"
+            alt=""
+            aria-hidden="true"
+            className="h-5 w-auto"
+            width="20"
+            height="23"
+          />
+          <span className="font-mono text-xs text-ink-2 tracking-[0.02em]">{hero.mascotLabel}</span>
+        </div>
         <h1 className="max-w-[820px] font-serif text-[length:clamp(40px,6.4vw,68px)] leading-[1.08] font-medium tracking-[-0.02em]">
           {hero.headlineLead}
           <span className="relative inline-block">

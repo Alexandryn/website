@@ -45,6 +45,7 @@ export const site = {
   },
 
   hero: {
+    mascotLabel: 'Meet Alex, the library guardian',
     headlineLead: 'A library that lives ',
     headlineEmphasis: 'at home',
     headlineEnd: '.',
