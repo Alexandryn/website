@@ -28,7 +28,7 @@ export const site = {
 
   meta: {
     description:
-      'Alexandryn is a self-hosted digital library. Run it on your desktop or a home server, and read your books from any device on your home network.',
+      'Alexandryn is a self-hosted digital library. Run it on your desktop, or on a home server with Docker to read your books from any device on your home network.',
   },
 
   links,
@@ -49,7 +49,7 @@ export const site = {
     headlineEmphasis: 'at home',
     headlineEnd: '.',
     subline:
-      'Runs on your desktop, or on a home server with Docker. Your books, readable from any device on your home network once you turn network access on — no cloud service, no third-party account.',
+      'Runs on your desktop, or on a home server with Docker. On the desktop, your library is on that computer. With Docker, it is readable from any device on your home network — no cloud service, no third-party account.',
     primaryLabel: 'Download',
     primaryHref: `#${anchors.download}`,
     secondaryLabel: 'Read the docs',
@@ -91,7 +91,7 @@ export const site = {
       {
         number: '03',
         title: 'Read anywhere',
-        body: 'Turn on network access, then open the web reader on any device on your home network.',
+        body: 'On the desktop, read in the app. With Docker, publish the port to your home network and open the web reader on any device there.',
       },
     ],
   },
@@ -103,11 +103,11 @@ export const site = {
     },
     devices: {
       title: 'Read on any device',
-      body: 'Open Alexandryn on your laptop. Pick up where you left off on your phone or tablet, over your home network.',
+      body: 'Run Alexandryn on a home server with Docker, and pick up where you left off on your laptop, phone, or tablet, over your home network.',
     },
     privacy: {
       title: 'No cloud service',
-      body: 'Your library and reading data stay on your own server. By default the only outside service Alexandryn contacts is Open Library, for book details. Alexandryn only listens on your own machine until you turn network access on, it always requires a login, and a publicly reachable setup also requires TLS.',
+      body: 'Your library and reading data stay on your own server. By default the only outside service Alexandryn contacts is Open Library, for book details. Alexandryn only listens on your own machine until you choose to expose it, it always requires a login, and a publicly reachable setup also requires TLS.',
     },
     openSource: {
       title: 'Open source',
@@ -169,7 +169,7 @@ export const site = {
   footer: {
     ariaLabel: 'Footer',
     description:
-      'A self-hosted digital library for your home network. Runs on your desktop or on a home server; readable from any device on your network.',
+      'A self-hosted digital library for your home network. Runs on your desktop or on a home server; a server is readable from any device on your network.',
     columns: [
       [
         { label: 'GitHub', href: repo },

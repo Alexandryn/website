@@ -138,9 +138,25 @@ describe('load-bearing statements are present in full', () => {
     )
   })
 
-  it('says network access has to be turned on before other devices can reach the library', () => {
-    expect(site.hero.subline).toMatch(/once you turn network access on/)
-    expect(site.howItWorks.steps[2]!.body).toMatch(/turn on network access/i)
+  it('ties reading from other devices to the Docker setup, since the desktop app listens on its own computer only', () => {
+    expect(site.hero.subline).toMatch(
+      /With Docker, it is readable from any device on your home network/,
+    )
+    expect(site.howItWorks.steps[2]!.body).toMatch(/Docker/)
+    expect(site.features.devices.body).toMatch(/Docker/)
+  })
+
+  it('does not promise a network-access switch, which the desktop app does not have', () => {
+    const text = collect(site)
+      .map((e) => e.value)
+      .join(' ')
+    expect(text).not.toMatch(/turn(ing)? (on )?network access|network access on/i)
+  })
+
+  it('says the server listens only on this machine until you expose it', () => {
+    expect(site.features.privacy.body).toMatch(
+      /only listens on your own machine until you choose to expose it/,
+    )
   })
 
   it('says books are read from where they are, with no copy kept', () => {
