@@ -61,12 +61,15 @@ exist, because the download buttons point at `releases/latest`.
 
 1. Push this repository and the `docs` repository to GitHub under the
    `Alexandryn` organisation, and make both public with `alexandryn`.
-2. Run `npm run check:links -- --strict`. It requests every external URL and
+2. Deploy the docs site (`Alexandryn/docs`, Pages from GitHub Actions) so
+   `https://alexandryn.github.io/docs/` answers; the documentation cards and the
+   Docker link point there.
+3. Run `npm run check:links -- --strict`. It requests every external URL and
    fails until those repositories are public and the release exists; that
    failure is expected before launch.
-3. Re-run `scripts/capture-screenshots.ts` against the tagged version, look at
+4. Re-run `scripts/capture-screenshots.ts` against the tagged version, look at
    all three images, and commit them. `public/screenshots/screenshots.json`
    records which version they came from.
-4. In the repository settings, set Pages to deploy from GitHub Actions, then
+5. In the repository settings, set Pages to deploy from GitHub Actions, then
    watch the first workflow run and check the headers with `curl -I`.
-5. Open the site in Safari: WebKit could not be tested during development.
+6. Open the site in Safari: WebKit could not be tested during development.

@@ -7,7 +7,7 @@
 
 const version = '1.0.0'
 const repo = 'https://github.com/Alexandryn/alexandryn'
-const docsRepo = 'https://github.com/Alexandryn/docs'
+const docsSite = 'https://alexandryn.github.io/docs'
 const releases = `${repo}/releases`
 
 const anchors = { main: 'main', docs: 'docs', download: 'download' } as const
@@ -132,7 +132,7 @@ export const site = {
       'The installers are not yet code-signed, so macOS and Windows will warn you the first time you open Alexandryn.',
     dockerLead: 'Prefer Docker? Read the ',
     dockerLinkLabel: 'self-hosting guide →',
-    dockerHref: `${docsRepo}/blob/main/self-hosting-guide.md`,
+    dockerHref: `${docsSite}/getting-started/run-with-docker/`,
   },
 
   docs: {
@@ -141,27 +141,27 @@ export const site = {
       {
         title: 'Self-hosting',
         body: 'Run Alexandryn with Docker: setup, first run, persistent data',
-        href: `${docsRepo}/blob/main/self-hosting-guide.md`,
+        href: `${docsSite}/getting-started/run-with-docker/`,
       },
       {
         title: 'Administration',
         body: 'Accounts, libraries, sources, and backups',
-        href: `${docsRepo}/blob/main/administration-guide.md`,
+        href: `${docsSite}/admin/accounts-and-libraries/`,
       },
       {
         title: 'Security',
         body: 'How network access works, and what Alexandryn does not do',
-        href: `${docsRepo}/blob/main/security-reference.md`,
+        href: `${docsSite}/security/how-security-works/`,
       },
       {
         title: 'Updating',
         body: 'Pull a new version and check that it started',
-        href: `${docsRepo}/blob/main/updating-guide.md`,
+        href: `${docsSite}/updating/update-alexandryn/`,
       },
       {
         title: 'API contract',
-        body: 'The OpenAPI specification, for developers',
-        href: `${repo}/blob/main/api/openapi.yaml`,
+        body: 'The OpenAPI specification as browsable pages, for developers',
+        href: `${docsSite}/api/`,
       },
     ],
   },

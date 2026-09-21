@@ -7,7 +7,7 @@ const isColourKey = (key: string) => key === 'bg' || key === 'fg'
 
 const ALLOWED_LINK_PREFIXES = [
   'https://github.com/Alexandryn/alexandryn',
-  'https://github.com/Alexandryn/docs/',
+  'https://alexandryn.github.io/docs/',
 ]
 
 /** Returns one message per problem; an empty array means the content is acceptable. */
@@ -180,8 +180,21 @@ describe('structure', () => {
     ])
   })
 
-  it('points the API contract card at the OpenAPI specification itself', () => {
-    expect(site.docs.cards.at(-1)!.href).toMatch(/\/api\/openapi\.yaml$/)
+  it('sends every documentation card and the Docker link to the docs site', () => {
+    const hrefs = [...site.docs.cards.map((c) => c.href), site.download.dockerHref]
+    for (const href of hrefs) expect(href).toMatch(/^https:\/\/alexandryn\.github\.io\/docs\/.+\/$/)
+  })
+
+  it('points the API card at the API reference and the Docker link at the Docker guide', () => {
+    expect(site.docs.cards.at(-1)!.href).toBe('https://alexandryn.github.io/docs/api/')
+    expect(site.download.dockerHref).toBe(
+      'https://alexandryn.github.io/docs/getting-started/run-with-docker/',
+    )
+  })
+
+  it('no longer points the documentation cards at Markdown files or the raw spec on GitHub', () => {
+    for (const { href } of site.docs.cards) expect(href).not.toMatch(/github\.com|\.md$|\.yaml$/)
+    expect(site.download.dockerHref).not.toMatch(/github\.com|\.md$/)
   })
 
   it('offers macOS, Windows, and Linux downloads', () => {
