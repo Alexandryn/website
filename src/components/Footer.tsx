@@ -7,16 +7,17 @@ export function Footer({ name, footer }: { name: string; footer: Site['footer'] 
         <div className="flex flex-wrap justify-between gap-8 pb-8">
           <div className="max-w-[320px]">
             <p className="mb-2 text-base font-semibold tracking-[-0.01em]">{name}</p>
-            <p className="inline-flex min-h-8 items-center text-sm text-ink-2">
-              {footer.description}
-            </p>
+            <p className="text-sm text-ink-2">{footer.description}</p>
           </div>
           <nav aria-label={footer.ariaLabel} className="flex flex-wrap gap-10">
             {footer.columns.map((column) => (
               <ul key={column.map((link) => link.label).join()} className="flex flex-col gap-2.5">
                 {column.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="text-sm text-ink-2">
+                    <a
+                      href={link.href}
+                      className="inline-flex min-h-11 items-center text-sm text-ink-2 sm:min-h-8"
+                    >
                       {link.label}
                     </a>
                   </li>

@@ -12,7 +12,12 @@ test('Tab reaches every link in document order and each focus is visible', async
   await page.goto('/')
   const expected = await page
     .locator(FOCUSABLE)
-    .evaluateAll((els) => els.map((el) => el.getAttribute('href') ?? ''))
+    // A control hidden at this width (the menu button on a wide screen) is not a tab stop.
+    .evaluateAll((els) =>
+      els
+        .filter((el) => (el as HTMLElement).checkVisibility())
+        .map((el) => el.getAttribute('href') ?? ''),
+    )
   expect(expected.length).toBeGreaterThan(15)
 
   const visited: string[] = []

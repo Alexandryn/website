@@ -120,7 +120,8 @@ describe('keyboard order', () => {
     const names = focusable.map(accessibleName)
 
     expect(names[0]).toBe(site.nav.skipLabel)
-    expect(names.slice(1, 4)).toEqual([
+    expect(names.slice(1, 5)).toEqual([
+      site.nav.menuLabel,
       ...site.nav.links.map((link) => link.label),
       site.nav.downloadLabel,
     ])
