@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { gzipSync } from 'node:zlib'
 
-// SPEC.md success criterion 8: the page's JavaScript stays at or under 90 KiB gzipped.
+// The page's JavaScript stays at or under 90 KiB gzipped.
 const DEFAULT_LIMIT_KIB = 90
 
 /** Total gzipped size of every .js file under `<dir>/assets`. Throws if there is none. */

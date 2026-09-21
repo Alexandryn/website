@@ -2,8 +2,8 @@
 // Components take these as props and contain no prose, so a wording change is a
 // one-file edit and site.test.ts can check all of it in one place.
 //
-// Each claim was checked against the shipped software (see SPEC.md, "Copy
-// corrections"). If the software changes, change the claim here.
+// Each claim was checked against the shipped software. If the software
+// changes, change the claim here.
 
 const version = '1.0.1'
 const repo = 'https://github.com/Alexandryn/alexandryn'

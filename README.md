@@ -34,9 +34,6 @@ The output is plain static files in `dist/` and can be served by any static
 host. Everything the page needs, including fonts, is bundled: it makes no
 request to a third-party origin.
 
-The specification is in [`SPEC.md`](SPEC.md), and the implementation plan and
-task list are in [`tasks/`](tasks/).
-
 ## Licence
 
 GNU Affero General Public License v3.0 or later. See [`LICENSE`](LICENSE).
