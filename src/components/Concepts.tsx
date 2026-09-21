@@ -4,7 +4,7 @@ import { ConceptIcon } from './ConceptIcon.tsx'
 export function Concepts({ concepts }: { concepts: Site['concepts'] }) {
   return (
     <section className="bg-surface-alt px-[clamp(20px,5vw,64px)] py-[clamp(56px,8vw,88px)]">
-      <div className="mx-auto grid max-w-[1160px] grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+      <div className="mx-auto grid max-w-[1160px] grid-cols-1 md:grid-cols-3 gap-5">
         {concepts.map((concept) => (
           <div
             key={concept.title}

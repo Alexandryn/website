@@ -40,6 +40,7 @@ export const site = {
       { label: 'Documentation', href: `#${anchors.docs}` },
       { label: 'GitHub', href: repo },
     ],
+    menuLabel: 'Menu',
     downloadLabel: 'Download',
     downloadHref: `#${anchors.download}`,
   },

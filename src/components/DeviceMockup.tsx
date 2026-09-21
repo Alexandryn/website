@@ -23,7 +23,10 @@ export function DeviceMockup({ library, phone }: { library: Shot; phone: Shot })
         <div className="-mx-1.5 h-3.5 rounded-b-lg bg-linear-to-b from-ink to-black" />
       </div>
 
-      <div data-device="phone" className="relative z-[2] -mr-3.5 -ml-[30px] w-[132px] flex-none">
+      <div
+        data-device="phone"
+        className="relative z-[2] -mt-24 mr-2 ml-auto w-[132px] flex-none md:mt-0 md:mr-[-14px] md:ml-[-30px]"
+      >
         <div className="rounded-[22px] bg-ink p-2 shadow-lift">
           <div className="overflow-hidden rounded-2xl bg-paper">
             <Screenshot shot={phone} eager />

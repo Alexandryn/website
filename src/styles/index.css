@@ -40,6 +40,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* The header is sticky at every width; keep anchored sections from landing under it. */
+    scroll-padding-top: 4.5rem;
   }
 
   @media (prefers-reduced-motion: reduce) {

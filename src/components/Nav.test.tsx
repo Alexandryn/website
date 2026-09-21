@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { site } from '../content/site.ts'
 import { Nav } from './Nav.tsx'
@@ -31,6 +31,71 @@ describe('Nav', () => {
       'href',
       site.nav.downloadHref,
     )
+  })
+
+  it('has a menu button, named from site.ts, that starts closed and points at the links', () => {
+    renderNav()
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+    const list = document.getElementById(button.getAttribute('aria-controls')!)
+    expect(list).not.toBeNull()
+    for (const link of site.nav.links) {
+      expect(within(list!).getByRole('link', { name: link.label })).toBeInTheDocument()
+    }
+  })
+
+  it('has one set of links, not a copy for the menu and another for the bar', () => {
+    renderNav()
+    for (const link of site.nav.links) {
+      expect(screen.getAllByRole('link', { name: link.label })).toHaveLength(1)
+    }
+  })
+
+  it('opens and closes with the menu button, and keeps aria-expanded in step', () => {
+    renderNav()
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    fireEvent.click(button)
+    expect(button).toHaveAttribute('aria-expanded', 'true')
+    fireEvent.click(button)
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes on Escape and gives focus back to the button', () => {
+    renderNav()
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    fireEvent.click(button)
+    fireEvent.keyDown(button, { key: 'Escape' })
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+    expect(button).toHaveFocus()
+  })
+
+  it('closes when a link is chosen, since the page has just scrolled to it', () => {
+    renderNav()
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    fireEvent.click(button)
+    fireEvent.click(screen.getByRole('link', { name: site.nav.links[0]!.label }))
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes when the visitor taps outside the header', () => {
+    render(
+      <>
+        <Nav name={site.name} nav={site.nav} />
+        <p>elsewhere</p>
+      </>,
+    )
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    fireEvent.click(button)
+    fireEvent.pointerDown(screen.getByText('elsewhere'))
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('does not close when the tap is inside the open menu on something that is not a link', () => {
+    renderNav()
+    const button = screen.getByRole('button', { name: site.nav.menuLabel })
+    fireEvent.click(button)
+    fireEvent.pointerDown(screen.getByRole('navigation'))
+    expect(button).toHaveAttribute('aria-expanded', 'true')
   })
 
   it('is not scrolled at the top of the page', () => {
