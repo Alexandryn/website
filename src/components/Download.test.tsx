@@ -40,6 +40,13 @@ describe('Download', () => {
     expect(screen.getByText(site.download.signingNote)).toBeInTheDocument()
   })
 
+  it('says which Macs the macOS installer is for, above the signing note', () => {
+    renderDownload()
+    const note = screen.getByText(site.download.platformNote)
+    const signing = screen.getByText(site.download.signingNote)
+    expect(note.compareDocumentPosition(signing) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it('points Docker users at the self-hosting guide', () => {
     renderDownload()
     const link = screen.getByRole('link', { name: site.download.dockerLinkLabel })

@@ -5,7 +5,7 @@
 // Each claim was checked against the shipped software (see SPEC.md, "Copy
 // corrections"). If the software changes, change the claim here.
 
-const version = '1.0.0'
+const version = '1.0.1'
 const repo = 'https://github.com/Alexandryn/alexandryn'
 const docsSite = 'https://alexandryn.github.io/docs'
 const releases = `${repo}/releases`
@@ -130,6 +130,7 @@ export const site = {
     ],
     versionLabel: `v${version}`,
     changelogLabel: 'Changelog',
+    platformNote: 'The macOS installer is for Macs with Apple silicon; there is no Intel build.',
     signingNote:
       'The installers are not yet code-signed, so macOS and Windows will warn you the first time you open Alexandryn.',
     dockerLead: 'Prefer Docker? Read the ',
