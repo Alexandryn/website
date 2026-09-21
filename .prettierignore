@@ -1,7 +1,3 @@
 # Build output
 dist
 dist-ssr
-
-# Hand-wrapped planning docs; Prettier would re-flow their tables.
-SPEC.md
-tasks
