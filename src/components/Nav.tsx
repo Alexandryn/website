@@ -77,12 +77,12 @@ export function Nav({ name, nav }: { name: string; nav: Site['nav'] }) {
       <div className="mx-auto flex max-w-[1160px] items-center gap-3 py-2 sm:py-3.5">
         <div className="flex min-w-0 items-center gap-2.5">
           <img
-            src="alex.svg"
+            src="favicon.svg"
             alt=""
             aria-hidden="true"
             className="h-6 w-auto"
             width="24"
-            height="28"
+            height="24"
           />
           <span className="text-[17px] font-semibold tracking-[-0.01em]">{name}</span>
         </div>
