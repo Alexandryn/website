@@ -1,7 +1,7 @@
 {
   "name": "alexandryn-website",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The public landing page for Alexandryn, a self-hosted digital library.",
   "license": "AGPL-3.0-or-later",
   "type": "module",
