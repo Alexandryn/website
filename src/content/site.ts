@@ -5,7 +5,7 @@
 // Each claim was checked against the shipped software. If the software
 // changes, change the claim here.
 
-const version = '1.0.1'
+const version = '1.0.2'
 const repo = 'https://github.com/Alexandryn/alexandryn'
 const docsSite = 'https://alexandryn.github.io/docs'
 const releases = `${repo}/releases`
