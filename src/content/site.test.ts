@@ -112,8 +112,8 @@ describe('the audit catches what it is for (positive controls)', () => {
     [
       'a hard-coded wrong version',
       'howItWorks.steps[0].body',
-      'Install 1.0.4 today.',
-      /version 1\.0\.4/,
+      'Install 1.0.5 today.',
+      /version 1\.0\.5/,
     ],
     ['an exclamation mark', 'download.heading', 'Ready to run your own library!', /exclamation/],
   ])('rejects %s', (_label, path, value, expected) => {
@@ -184,8 +184,8 @@ describe('load-bearing statements are present in full', () => {
 })
 
 describe('version', () => {
-  it('is 1.0.3 and the visible label derives from it', () => {
-    expect(site.version).toBe('1.0.3')
+  it('is 1.0.4 and the visible label derives from it', () => {
+    expect(site.version).toBe('1.0.4')
     expect(site.download.versionLabel).toBe(`v${site.version}`)
   })
 })
